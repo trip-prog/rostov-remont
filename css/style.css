@@ -301,7 +301,8 @@ input, textarea { font: inherit; }
 .hero__media { position: relative; }
 .hero__media img {
   width: 100%;
-  aspect-ratio: 5 / 5.4;
+  height: auto;
+  aspect-ratio: 5 / 4.3;
   object-fit: cover;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
