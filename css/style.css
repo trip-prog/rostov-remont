@@ -283,7 +283,7 @@ input, textarea { font: inherit; }
 /* Rounded photo shape sitting in the same vertical band as the text */
 .hero__media { position: relative; }
 .hero__photo {
-  border-radius: 46px 60px 46px 72px;
+  border-radius: 40px;
   overflow: hidden;
   aspect-ratio: 1.08 / 1;
   box-shadow: var(--shadow-lg);
@@ -704,7 +704,7 @@ input, textarea { font: inherit; }
   .hero__features { grid-template-columns: repeat(2, 1fr); padding: 18px; }
   .services__grid, .portfolio__grid, .reviews__grid, .stats { grid-template-columns: 1fr; }
   .steps__grid { grid-template-columns: 1fr; }
-  .hero__photo { border-radius: 32px 42px 32px 50px; }
+  .hero__photo { border-radius: 28px; }
   .hero__badge { width: 92px; height: 92px; right: 6px; bottom: 26px; }
   .hero__badge b { font-size: 22px; }
   .hero__badge span { font-size: 10px; }
