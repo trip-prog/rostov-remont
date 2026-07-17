@@ -280,13 +280,9 @@ input, textarea { font: inherit; }
 
 .hero__content { max-width: 560px; }
 
-/* Organic tilted photo shape sitting in the same vertical band as the text */
-.hero__media {
-  position: relative;
-  padding: 18px 16px 22px 16px; /* room for the tilt so the corners stay inside */
-}
+/* Rounded photo shape sitting in the same vertical band as the text */
+.hero__media { position: relative; }
 .hero__photo {
-  transform: rotate(-4deg);
   border-radius: 46px 60px 46px 72px;
   overflow: hidden;
   aspect-ratio: 1.08 / 1;
@@ -296,7 +292,6 @@ input, textarea { font: inherit; }
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transform: rotate(4deg) scale(1.18); /* counter-tilt keeps the room level inside the shape */
 }
 .hero__title {
   margin-top: 22px;
