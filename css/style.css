@@ -479,8 +479,33 @@ input, textarea { font: inherit; }
 /* вертикальные видео-карточки портфолио */
 .portfolio__grid--video { align-items: start; }
 .project--video .project__media {
+  position: relative;
   aspect-ratio: 3 / 4;
   background: #10100f;
+}
+
+/* значок play: только там, где есть мышь — на тач-устройствах видео стартует само */
+.project__play { display: none; }
+@media (hover: hover) and (pointer: fine) {
+  .project__play {
+    display: grid;
+    place-items: center;
+    position: absolute;
+    left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+    width: 62px; height: 62px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    color: var(--gold-deep);
+    box-shadow: 0 8px 26px rgba(0, 0, 0, 0.28);
+    pointer-events: none;
+    transition: opacity 0.28s var(--ease), transform 0.28s var(--ease);
+  }
+  .project__play svg { width: 26px; height: 26px; margin-left: 3px; }
+  .project.is-playing .project__play {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.85);
+  }
 }
 .project__body { padding: 22px 24px 26px; }
 .project__tag {

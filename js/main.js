@@ -112,24 +112,54 @@ if (reduceMotion || !("IntersectionObserver" in window)) {
   }, 1500);
 }
 
-/* ===== Portfolio videos: play only while on screen ===== */
+/* ===== Portfolio videos =====
+   Десктоп (мышь): ролик играет только пока на карточке курсор.
+   Тач-устройства: автозапуск, пока карточка на экране. */
 const portfolioVideos = $$(".project__video");
 if (portfolioVideos.length) {
+  const canHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
   const playSafe = (v) => {
     const p = v.play();
     if (p && typeof p.catch === "function") p.catch(() => {});
+    v.closest(".project")?.classList.add("is-playing");
+  };
+  const stop = (v) => {
+    v.pause();
+    v.closest(".project")?.classList.remove("is-playing");
   };
 
-  if (reduceMotion || !("IntersectionObserver" in window)) {
-    // при reduce-motion оставляем статичный постер, видео не запускаем
-    if (!reduceMotion) portfolioVideos.forEach(playSafe);
+  if (canHover) {
+    portfolioVideos.forEach((v) => {
+      const card = v.closest(".project");
+      if (!card) return;
+      card.addEventListener("mouseenter", () => playSafe(v));
+      card.addEventListener("mouseleave", () => stop(v));
+      // клавиатурная навигация: фокус на карточке ведёт себя как наведение
+      card.addEventListener("focusin", () => playSafe(v));
+      card.addEventListener("focusout", () => stop(v));
+    });
+  }
+
+  if (!("IntersectionObserver" in window)) {
+    // без observer тач-устройствам остаётся постер, это не ломает секцию
   } else {
     const vObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           const v = entry.target;
+          if (canHover) {
+            // мышь: тянем только заголовок файла, чтобы старт по наведению был быстрым,
+            // но трафик не расходовался на три ролика целиком без единого наведения
+            if (entry.isIntersecting && v.preload === "none") {
+              v.preload = "metadata";
+              v.load();
+            }
+            return;
+          }
+          if (reduceMotion) return; // уважаем системную настройку «меньше движения»
           if (entry.isIntersecting) playSafe(v);
-          else v.pause();
+          else stop(v);
         });
       },
       { threshold: 0.35 }
