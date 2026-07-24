@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@1,500;1,600&display=swap" rel="stylesheet">
   <script>document.documentElement.classList.add("js");</script>
-  <link rel="stylesheet" href="css/style.css?v=2">
+  <link rel="stylesheet" href="css/style.css?v=3">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23c6952e'/><path d='M9 22V13l7-5 7 5v9' fill='none' stroke='%23fff' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/></svg>">
 </head>
 <body>
@@ -178,53 +178,41 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
       </a>
     </div>
-    <div class="portfolio__grid">
-      <article class="project" data-reveal>
-        <div class="project__media"><img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=800&q=80" alt="Интерьер квартиры в ЖК Левобережье" loading="lazy" width="800" height="600"></div>
+    <div class="portfolio__grid portfolio__grid--video">
+      <article class="project project--video" data-reveal>
+        <div class="project__media">
+          <video class="project__video" muted loop playsinline preload="none" poster="media/project-1.jpg" aria-label="Видео ремонта квартиры в ЖК Левобережье">
+            <source src="media/project-1.mp4" type="video/mp4">
+          </video>
+        </div>
         <div class="project__body">
           <span class="project__tag">Капитальный ремонт</span>
           <h3>ЖК «Левобережье»</h3>
           <p class="project__meta">65 м² · 1,2 млн ₽ · 2 месяца</p>
         </div>
       </article>
-      <article class="project" data-reveal data-reveal-delay="80">
-        <div class="project__media"><img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=800&q=80" alt="Кухня-гостиная в ЖК Вересаево" loading="lazy" width="800" height="600"></div>
+      <article class="project project--video" data-reveal data-reveal-delay="80">
+        <div class="project__media">
+          <video class="project__video" muted loop playsinline preload="none" poster="media/project-2.jpg" aria-label="Видео ремонта квартиры в ЖК Вересаево">
+            <source src="media/project-2.mp4" type="video/mp4">
+          </video>
+        </div>
         <div class="project__body">
-          <span class="project__tag">Новостройка</span>
+          <span class="project__tag">Новостройка под ключ</span>
           <h3>ЖК «Вересаево»</h3>
           <p class="project__meta">48 м² · 980 тыс ₽ · 6 недель</p>
         </div>
       </article>
-      <article class="project" data-reveal data-reveal-delay="160">
-        <div class="project__media"><img src="https://images.unsplash.com/photo-1617103996702-96ff29b1c467?auto=format&fit=crop&w=800&q=80" alt="Спальня в квартире в центре Ростова" loading="lazy" width="800" height="600"></div>
+      <article class="project project--video" data-reveal data-reveal-delay="160">
+        <div class="project__media">
+          <video class="project__video" muted loop playsinline preload="none" poster="media/project-3.jpg" aria-label="Видео дизайнерского ремонта в центре Ростова">
+            <source src="media/project-3.mp4" type="video/mp4">
+          </video>
+        </div>
         <div class="project__body">
           <span class="project__tag">Дизайн-проект</span>
-          <h3>Центр города</h3>
+          <h3>Центр Ростова</h3>
           <p class="project__meta">75 м² · 1,4 млн ₽ · 2,5 месяца</p>
-        </div>
-      </article>
-      <article class="project" data-reveal>
-        <div class="project__media"><img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80" alt="Гостиная в ЖК Суворовский" loading="lazy" width="800" height="600"></div>
-        <div class="project__body">
-          <span class="project__tag">Капитальный ремонт</span>
-          <h3>ЖК «Суворовский»</h3>
-          <p class="project__meta">52 м² · 1,1 млн ₽ · 7 недель</p>
-        </div>
-      </article>
-      <article class="project" data-reveal data-reveal-delay="80">
-        <div class="project__media"><img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=800&q=80" alt="Просторная квартира в ЖК Красный Аксай" loading="lazy" width="800" height="600"></div>
-        <div class="project__body">
-          <span class="project__tag">Дизайн-проект</span>
-          <h3>ЖК «Красный Аксай»</h3>
-          <p class="project__meta">88 м² · 1,8 млн ₽ · 3 месяца</p>
-        </div>
-      </article>
-      <article class="project" data-reveal data-reveal-delay="160">
-        <div class="project__media"><img src="https://images.unsplash.com/photo-1615529182904-14819c35db37?auto=format&fit=crop&w=800&q=80" alt="Уютная студия в переулке Соборном" loading="lazy" width="800" height="600"></div>
-        <div class="project__body">
-          <span class="project__tag">Косметический ремонт</span>
-          <h3>Пер. Соборный</h3>
-          <p class="project__meta">40 м² · 850 тыс ₽ · 4 недели</p>
         </div>
       </article>
     </div>
@@ -373,6 +361,6 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="js/main.js?v=2" defer></script>
+<script src="js/main.js?v=3" defer></script>
 </body>
 </html>

@@ -111,3 +111,29 @@ if (reduceMotion || !("IntersectionObserver" in window)) {
     }
   }, 1500);
 }
+
+/* ===== Portfolio videos: play only while on screen ===== */
+const portfolioVideos = $$(".project__video");
+if (portfolioVideos.length) {
+  const playSafe = (v) => {
+    const p = v.play();
+    if (p && typeof p.catch === "function") p.catch(() => {});
+  };
+
+  if (reduceMotion || !("IntersectionObserver" in window)) {
+    // при reduce-motion оставляем статичный постер, видео не запускаем
+    if (!reduceMotion) portfolioVideos.forEach(playSafe);
+  } else {
+    const vObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const v = entry.target;
+          if (entry.isIntersecting) playSafe(v);
+          else v.pause();
+        });
+      },
+      { threshold: 0.35 }
+    );
+    portfolioVideos.forEach((v) => vObserver.observe(v));
+  }
+}
