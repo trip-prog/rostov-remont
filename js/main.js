@@ -62,6 +62,27 @@ maskPhone($("#cf-phone"));
 /* ===== Contact form (demo) ===== */
 const form = $("#contact-form");
 if (form) {
+  const consent = $("#cf-consent");
+  const submit = $("#cf-submit");
+  const consentRow = consent.closest(".consent");
+
+  // Кнопка недоступна, пока не отмечено согласие на обработку ПДн
+  const syncConsent = () => {
+    submit.disabled = !consent.checked;
+    if (consent.checked) consentRow.classList.remove("is-hint");
+  };
+  consent.addEventListener("change", syncConsent);
+  syncConsent();
+
+  // Клик по заблокированной кнопке ничего не даёт, поэтому объясняем причину
+  submit.addEventListener("click", (e) => {
+    if (submit.disabled) {
+      e.preventDefault();
+      consentRow.classList.add("is-hint");
+      consentRow.scrollIntoView({ block: "center", behavior: "smooth" });
+    }
+  });
+
   form.addEventListener("submit", (e) => {
     e.preventDefault();
     const phone = $("#cf-phone");
@@ -71,9 +92,68 @@ if (form) {
       phone.focus();
       return;
     }
+    if (!consent.checked) return;
+
+    // Момент согласия фиксируется и ушёл бы вместе с заявкой: на боевом сайте
+    // это доказательство того, что галочка была проставлена
+    $("#cf-consent-ts").value = new Date().toISOString();
+
     error.textContent = "";
     form.reset();
+    syncConsent();
     showToast("Спасибо! Заявка принята — перезвоним в течение 15 минут (демо-режим: данные никуда не отправляются).");
+  });
+}
+
+/* ===== Cookie consent =====
+   Аналитика на боевом сайте подключается только из loadAnalytics(),
+   то есть после явного «Принять». До этого не грузится ничего. */
+const cookieBanner = $("#cookie-banner");
+if (cookieBanner) {
+  const KEY = "rr_cookie_consent";
+  const TTL = 365 * 24 * 60 * 60 * 1000; // 12 месяцев
+
+  const readChoice = () => {
+    try {
+      const raw = localStorage.getItem(KEY);
+      if (!raw) return null;
+      const saved = JSON.parse(raw);
+      if (Date.now() - saved.ts > TTL) {
+        localStorage.removeItem(KEY);
+        return null;
+      }
+      return saved.value;
+    } catch {
+      return null;
+    }
+  };
+
+  const saveChoice = (value) => {
+    try {
+      localStorage.setItem(KEY, JSON.stringify({ value, ts: Date.now() }));
+    } catch {
+      /* приватный режим — просто не запоминаем выбор */
+    }
+  };
+
+  const loadAnalytics = () => {
+    // Здесь подключается счётчик клиента (Яндекс Метрика).
+    // Демо-сайт аналитику не грузит, поэтому тело пустое.
+  };
+
+  const choice = readChoice();
+  if (choice === "accepted") loadAnalytics();
+  else if (choice !== "declined") cookieBanner.hidden = false;
+
+  $("#cookie-accept").addEventListener("click", () => {
+    saveChoice("accepted");
+    loadAnalytics();
+    cookieBanner.hidden = true;
+  });
+
+  $("#cookie-decline").addEventListener("click", () => {
+    saveChoice("declined");
+    cookieBanner.hidden = true;
   });
 }
 

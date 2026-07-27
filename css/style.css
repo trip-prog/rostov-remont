@@ -626,6 +626,47 @@ input, textarea { font: inherit; }
 .field__error { color: #cf4b4b; font-size: 13px; min-height: 1em; font-weight: 600; }
 .cta-form__note { font-size: 12.5px; color: var(--text-muted); text-align: center; margin-top: 2px; }
 
+/* ===== CONSENT ===== */
+.consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--text-muted);
+  cursor: pointer;
+  user-select: none;
+}
+.consent input[type="checkbox"] {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  margin: 1px 0 0;
+  accent-color: var(--gold);
+  cursor: pointer;
+}
+.consent a { color: var(--gold-deep); text-decoration: underline; text-underline-offset: 2px; }
+.consent a:hover { color: var(--gold); }
+.consent--optional { margin-top: -6px; }
+
+/* Заблокированная кнопка должна выглядеть заблокированной,
+   иначе человек жмёт и не понимает, почему ничего не происходит */
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+  filter: grayscale(0.35);
+}
+.btn:disabled:hover { transform: none; box-shadow: none; }
+
+.consent.is-hint { color: #cf4b4b; }
+.consent.is-hint input[type="checkbox"] {
+  outline: 2px solid #cf4b4b;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
 /* ===== FOOTER ===== */
 .footer {
   background: var(--dark);
@@ -646,6 +687,17 @@ input, textarea { font: inherit; }
 .footer__contacts a { transition: color 0.2s var(--ease); }
 .footer__contacts a:hover { color: var(--gold-bright); }
 .footer__phone { font-size: 20px; font-weight: 800; color: #fff !important; }
+.footer__legal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 26px;
+  padding-block: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.09);
+  font-size: 13.5px;
+}
+.footer__legal a { color: #a89a83; transition: color 0.2s var(--ease); }
+.footer__legal a:hover { color: var(--gold-bright); }
+
 .footer__bottom {
   display: flex;
   justify-content: space-between;
@@ -657,6 +709,44 @@ input, textarea { font: inherit; }
   color: #8f836e;
 }
 .footer__demo { color: var(--gold-bright); }
+
+/* ===== COOKIE BANNER ===== */
+.cookie {
+  position: fixed;
+  left: 16px;
+  right: 16px;
+  bottom: 16px;
+  z-index: 250;
+  max-width: 720px;
+  margin-inline: auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 22px;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-soft);
+  animation: cookie-in 0.32s var(--ease);
+}
+@keyframes cookie-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) { .cookie { animation: none; } }
+
+.cookie__text { flex: 1 1 300px; margin: 0; }
+.cookie__text a { color: var(--gold-deep); text-decoration: underline; text-underline-offset: 2px; }
+.cookie__actions { display: flex; gap: 10px; flex: 0 0 auto; }
+
+@media (max-width: 560px) {
+  .cookie { flex-direction: column; align-items: stretch; padding: 16px 18px; }
+  .cookie__actions .btn { flex: 1; }
+}
 
 /* ===== TOAST ===== */
 .toast {

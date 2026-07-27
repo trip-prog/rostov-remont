@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@1,500;1,600&display=swap" rel="stylesheet">
   <script>document.documentElement.classList.add("js");</script>
-  <link rel="stylesheet" href="css/style.css?v=4">
+  <link rel="stylesheet" href="css/style.css?v=5">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23c6952e'/><path d='M9 22V13l7-5 7 5v9' fill='none' stroke='%23fff' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/></svg>">
 </head>
 <body>
@@ -329,8 +329,18 @@
           <span>Комментарий <i>(необязательно)</i></span>
           <textarea name="comment" id="cf-comment" rows="2" placeholder="Например: двушка в новостройке, нужен ремонт под ключ"></textarea>
         </label>
-        <button type="submit" class="btn btn--gold btn--full">Заказать звонок</button>
-        <p class="cta-form__note">Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности.</p>
+        <label class="consent">
+          <input type="checkbox" name="consent_pd" id="cf-consent" required>
+          <span>Я даю <a href="legal/consent.html" target="_blank" rel="noopener">согласие на обработку персональных данных</a> и принимаю условия <a href="legal/privacy.html" target="_blank" rel="noopener">Политики конфиденциальности</a></span>
+        </label>
+        <label class="consent consent--optional">
+          <input type="checkbox" name="consent_ads" id="cf-ads">
+          <span>Согласен получать новости и специальные предложения</span>
+        </label>
+        <input type="hidden" name="consent_ts" id="cf-consent-ts">
+        <input type="hidden" name="consent_docs_rev" value="27.07.2026">
+        <button type="submit" class="btn btn--gold btn--full" id="cf-submit" disabled>Заказать звонок</button>
+        <p class="cta-form__note">Перезвоним в течение 15 минут в рабочее время.</p>
       </form>
     </div>
   </div>
@@ -362,6 +372,12 @@
       <span>Ежедневно, 9:00–20:00</span>
     </div>
   </div>
+  <div class="container footer__legal">
+    <a href="legal/privacy.html">Политика конфиденциальности</a>
+    <a href="legal/consent.html">Согласие на обработку данных</a>
+    <a href="legal/terms.html">Пользовательское соглашение</a>
+    <a href="legal/cookie.html">Файлы cookie</a>
+  </div>
   <div class="container footer__bottom">
     <span>© 2026 ROSTOV REMONT. Все права защищены.</span>
     <span class="footer__demo">Демонстрационный сайт. Заявки не отправляются.</span>
@@ -370,6 +386,18 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="js/main.js?v=4" defer></script>
+<!-- ===== COOKIE ===== -->
+<div class="cookie" id="cookie-banner" role="dialog" aria-live="polite" aria-label="Использование файлов cookie" hidden>
+  <p class="cookie__text">
+    Мы используем файлы cookie, чтобы сайт работал корректно и чтобы понимать, как им пользуются.
+    Подробнее в <a href="legal/cookie.html">политике cookie</a>.
+  </p>
+  <div class="cookie__actions">
+    <button type="button" class="btn btn--ghost btn--sm" id="cookie-decline">Отклонить</button>
+    <button type="button" class="btn btn--gold btn--sm" id="cookie-accept">Принять</button>
+  </div>
+</div>
+
+<script src="js/main.js?v=5" defer></script>
 </body>
 </html>
