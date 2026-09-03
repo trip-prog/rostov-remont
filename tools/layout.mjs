@@ -8,7 +8,7 @@ import { site, icons, services, categories, mainNav, legalDocs } from "./site.da
 
 // Версия ссылок на css/js. Поднимается при изменении стилей или скриптов,
 // чтобы у вернувшихся посетителей не осталась старая версия в кэше.
-export const ASSET_VERSION = "10";
+export const ASSET_VERSION = "11";
 
 /** Иконка в единой обёртке: тонкая линия, наследует цвет текста. */
 export const icon = (name, cls = "") =>
