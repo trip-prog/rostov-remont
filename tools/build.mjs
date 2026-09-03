@@ -37,22 +37,18 @@ function buildHome() {
 <!-- ===== HERO ===== -->
 <section class="hero">
   <div class="container hero__inner">
-    <div class="hero__content" data-reveal>
+    <div class="hero__content">
       <span class="pill">${icon("pin")}${site.city}</span>
-      <h1 class="hero__title">Ремонт квартир<br>в Ростове-на-Дону<br><em>под ключ</em></h1>
+      <h1 class="hero__title">Ремонт квартир под ключ<br>в Ростове-на-Дону</h1>
       <p class="hero__subtitle">Создаём комфортные интерьеры и берём все заботы по ремонту на себя.</p>
       <div class="hero__cta">
         <a href="#zayavka" class="btn btn--gold">Рассчитать стоимость</a>
         <a href="portfolio.html" class="btn btn--white">Смотреть проекты</a>
       </div>
     </div>
-    <div class="hero__media" data-reveal data-reveal-delay="100">
+    <div class="hero__media">
       <div class="hero__photo">
         <img src="работы/Плиточные работы/photo_4_2026-09-03_11-58-03.jpg" alt="Готовая ванная комната с крупноформатной плиткой" loading="eager" width="1024" height="768">
-      </div>
-      <div class="hero__badge">
-        <b>${site.warranty.split(" ")[0]} лет</b>
-        <span>гарантии<br>на все работы</span>
       </div>
     </div>
   </div>
@@ -76,7 +72,6 @@ function buildHome() {
     <div class="assembly__scrim" aria-hidden="true"></div>
     <div class="assembly__overlay">
       <div class="container">
-        <span class="assembly__eyebrow">Листайте — комната собирается</span>
         <h2 class="assembly__title">Как рождается ваш ремонт</h2>
         <p class="assembly__caption" id="assembly-caption">Коробка от застройщика</p>
         <div class="assembly__dots" id="assembly-dots" aria-hidden="true"></div>
@@ -88,8 +83,7 @@ function buildHome() {
 <!-- ===== О КОМПАНИИ ===== -->
 <section class="section about">
   <div class="container about__inner">
-    <div class="about__text" data-reveal>
-      <span class="eyebrow">О компании</span>
+    <div class="about__text">
       <h2 class="section__title">Строительная бригада, которую<br>не стыдно рекомендовать соседям</h2>
       <p class="section__note">С ${site.since} года ремонтируем квартиры, новостройки и коммерческие помещения в Ростове-на-Дону и области. Работаем официально по договору, отвечаем за результат и остаёмся на связи даже после сдачи объекта.</p>
       <ul class="about__list">
@@ -99,7 +93,7 @@ function buildHome() {
       </ul>
       <a href="o-kompanii.html" class="link-arrow">Подробнее о компании${icon("arrow")}</a>
     </div>
-    <ul class="stats" data-reveal data-reveal-delay="120">
+    <ul class="stats">
       <li><b>10+</b><span>лет на&nbsp;рынке</span></li>
       <li><b>850+</b><span>выполненных проектов</span></li>
       <li><b>95%</b><span>клиентов рекомендуют нас</span></li>
@@ -112,7 +106,6 @@ function buildHome() {
 <section class="section section--alt">
   <div class="container">
     ${sectionHead({
-      eyebrow: "Услуги",
       title: "Виды ремонта под любую задачу",
       note: "Подберём формат работ под ваш бюджет и сроки — от косметического обновления до ремонта по авторскому дизайн-проекту.",
       link: { href: "uslugi/index.html", label: "Все услуги" },
@@ -126,7 +119,6 @@ function buildHome() {
 <section class="section">
   <div class="container">
     ${sectionHead({
-      eyebrow: "Портфолио",
       title: "Работы без ретуши",
       note: "Показываем не только красивый финал, но и то, что останется за стенами после ремонта.",
       link: { href: "portfolio.html", label: "Смотреть 27 фотографий" },
@@ -140,7 +132,6 @@ function buildHome() {
 <section class="section section--alt">
   <div class="container">
     ${sectionHead({
-      eyebrow: "Как мы работаем",
       title: "Пять понятных этапов",
       note: "Каждый шаг зафиксирован в договоре. Вы всегда знаете, что происходит на объекте и сколько это стоит.",
     })}
@@ -151,7 +142,7 @@ function buildHome() {
 <!-- ===== ОТЗЫВЫ ===== -->
 <section class="section">
   <div class="container">
-    ${sectionHead({ eyebrow: "Отзывы", title: "Что говорят наши клиенты" })}
+    ${sectionHead({ title: "Что говорят наши клиенты" })}
     ${reviewsBlock(reviews.slice(0, 3))}
   </div>
 </section>
@@ -175,7 +166,7 @@ function buildServicesIndex() {
       const list = services.filter((s) => s.category === cat.id);
       return `<section class="section${cat.id === "rooms" ? " section--alt" : ""}">
   <div class="container">
-    ${sectionHead({ eyebrow: cat.title, title: cat.title, note: cat.note })}
+    ${sectionHead({ title: cat.title, note: cat.note })}
     ${serviceGrid(list, "")}
   </div>
 </section>`;
@@ -189,7 +180,6 @@ ${breadcrumbs([
 ])}
 
 ${pageHero({
-  eyebrow: "Услуги",
   title: "Что мы делаем",
   lead: `${services.length} направлений работ: от полного ремонта под ключ до отдельной задачи вроде штукатурки или укладки плитки. Возьмёмся и за квартиру целиком, и за одну комнату.`,
   facts: [
@@ -218,7 +208,7 @@ ${ctaBlock({ base: "../" })}`;
 function buildService(s) {
   const includes = s.includes
     .map(
-      (it, i) => `<li data-reveal${i % 3 ? ` data-reveal-delay="${(i % 3) * 70}"` : ""}>
+      (it) => `<li>
         <span class="includes__mark">${icon("check")}</span>
         <div><b>${it.t}</b><p>${it.d}</p></div>
       </li>`
@@ -233,7 +223,6 @@ ${breadcrumbs([
 ])}
 
 ${pageHero({
-  eyebrow: categories.find((c) => c.id === s.category).title,
   title: s.title,
   lead: s.lead,
   facts: s.facts,
@@ -246,7 +235,6 @@ ${pageHero({
 <section class="section">
   <div class="container">
     ${sectionHead({
-      eyebrow: "Состав работ",
       title: "Что входит в услугу",
       note: "Полный перечень фиксируется в смете до начала работ — дополнительных строк по ходу ремонта не появляется.",
     })}
@@ -260,14 +248,13 @@ ${pageHero({
 <section class="section section--alt">
   <div class="container">
     ${sectionHead({
-      eyebrow: "Стоимость",
       title: "Цены на работы",
       note: "Цены указаны за работу без стоимости материалов. Точная сумма — после бесплатного замера на объекте.",
       link: { href: "../tseny.html", label: "Полный прайс-лист" },
       row: true,
     })}
     ${priceTable(s.priceRows, `Прайс: ${s.menu.toLowerCase()}`)}
-    <p class="price-note" data-reveal>${icon("doc")} Смета фиксируется договором. Если объём работ вырастет, изменения оформляются допсоглашением — до того, как мастера приступят.</p>
+    <p class="price-note">${icon("doc")} Смета фиксируется договором. Если объём работ вырастет, изменения оформляются допсоглашением — до того, как мастера приступят.</p>
   </div>
 </section>
 
@@ -275,7 +262,6 @@ ${pageHero({
 <section class="section">
   <div class="container">
     ${sectionHead({
-      eyebrow: "Как мы работаем",
       title: "Пять понятных этапов",
       note: "Каждый шаг зафиксирован в договоре. Вы всегда знаете, что происходит на объекте и сколько это стоит.",
     })}
@@ -286,7 +272,7 @@ ${pageHero({
 <!-- ===== FAQ ===== -->
 <section class="section section--alt">
   <div class="container container--narrow">
-    ${sectionHead({ eyebrow: "Вопросы", title: "Частые вопросы" })}
+    ${sectionHead({ title: "Частые вопросы" })}
     ${faqBlock(s.faq)}
   </div>
 </section>
@@ -312,7 +298,6 @@ function buildPortfolio() {
 ${breadcrumbs([{ href: "index.html", label: "Главная" }, { label: "Портфолио" }])}
 
 ${pageHero({
-  eyebrow: "Портфолио",
   title: "Наши работы",
   lead: "Чистовая отделка и инженерия до того, как их закроют стены. Все фотографии сделаны на наших объектах — без фотостоков и ретуши.",
   facts: [
@@ -331,7 +316,6 @@ ${pageHero({
 <section class="section section--alt">
   <div class="container">
     ${sectionHead({
-      eyebrow: "Видео",
       title: "Объекты в движении",
       note: "Короткие обходы готовых квартир. На компьютере ролик запускается при наведении, на телефоне — сам.",
     })}
@@ -341,7 +325,7 @@ ${pageHero({
 
 <section class="section">
   <div class="container">
-    ${sectionHead({ eyebrow: "Отзывы", title: "Что говорят наши клиенты" })}
+    ${sectionHead({ title: "Что говорят наши клиенты" })}
     ${reviewsBlock(reviews)}
   </div>
 </section>
@@ -365,8 +349,8 @@ function buildPrices() {
       const rows = list.map((s) => ({ n: `<a href="uslugi/${s.slug}.html">${s.menu}</a>`, u: s.term, p: s.price }));
       return `<section class="section${ci % 2 ? " section--alt" : ""}">
   <div class="container">
-    ${sectionHead({ eyebrow: cat.title, title: cat.title, note: cat.note })}
-    <div class="price-table__wrap" data-reveal>
+    ${sectionHead({ title: cat.title, note: cat.note })}
+    <div class="price-table__wrap">
       <table class="price-table">
         <thead><tr><th scope="col">Услуга</th><th scope="col">Срок</th><th scope="col">Цена</th></tr></thead>
         <tbody>
@@ -383,7 +367,6 @@ function buildPrices() {
 ${breadcrumbs([{ href: "index.html", label: "Главная" }, { label: "Цены" }])}
 
 ${pageHero({
-  eyebrow: "Цены",
   title: "Прайс-лист на ремонт",
   lead: "Цены за работу без стоимости материалов, актуальны на 2026 год. Итоговая сумма фиксируется в смете после бесплатного замера и дальше не меняется.",
   facts: [
@@ -397,7 +380,7 @@ ${tables}
 
 <section class="section section--alt">
   <div class="container container--narrow">
-    ${sectionHead({ eyebrow: "Вопросы", title: "О деньгах — честно" })}
+    ${sectionHead({ title: "О деньгах — честно" })}
     ${faqBlock([
       { q: "Смета может вырасти в процессе?", a: "Только если меняется объём работ — например, вы решили перенести стену, которой не было в проекте. Такие изменения оформляются допсоглашением с новой ценой до начала работ. Сама по себе, «из-за подорожания», смета не растёт." },
       { q: "Материалы вы закупаете или я?", a: "Как удобнее. Обычно закупаем мы: есть оптовые цены у поставщиков, разница часто перекрывает нашу наценку. Все чеки передаём вам. Если хотите покупать сами — дадим точную спецификацию с количеством." },
@@ -429,7 +412,7 @@ function buildAbout() {
     { icon: "wallet", t: "Прозрачные материалы", d: "Закупаем по оптовым ценам и отдаём все чеки. Наценку не прячем в стоимости плитки." },
   ]
     .map(
-      (p, i) => `<li class="principle" data-reveal${i % 3 ? ` data-reveal-delay="${(i % 3) * 80}"` : ""}>
+      (p) => `<li class="principle">
         <span class="principle__icon">${icon(p.icon)}</span>
         <h3>${p.t}</h3>
         <p>${p.d}</p>
@@ -445,7 +428,7 @@ function buildAbout() {
     { y: "2026", t: "850+ объектов", d: "В штате 34 мастера, 6 прорабов и собственный отдел закупок." },
   ]
     .map(
-      (t, i) => `<li class="timeline__item" data-reveal${i ? ` data-reveal-delay="${Math.min(i, 3) * 70}"` : ""}>
+      (t) => `<li class="timeline__item">
         <span class="timeline__year">${t.y}</span>
         <div class="timeline__body"><b>${t.t}</b><p>${t.d}</p></div>
       </li>`
@@ -456,7 +439,6 @@ function buildAbout() {
 ${breadcrumbs([{ href: "index.html", label: "Главная" }, { label: "О компании" }])}
 
 ${pageHero({
-  eyebrow: "О компании",
   title: "Бригада, которую<br>рекомендуют соседям",
   lead: `С ${site.since} года ремонтируем квартиры, новостройки и коммерческие помещения в Ростове-на-Дону и области. Работаем официально, отвечаем за результат и остаёмся на связи после сдачи объекта.`,
   facts: [
@@ -471,7 +453,6 @@ ${pageHero({
 <section class="section">
   <div class="container">
     ${sectionHead({
-      eyebrow: "Принципы",
       title: "Шесть правил, по которым мы работаем",
       note: "Это не лозунги для сайта, а условия, которые записаны в договоре и которые вы можете с нас спросить.",
     })}
@@ -483,7 +464,7 @@ ${pageHero({
 
 <section class="section section--alt">
   <div class="container container--narrow">
-    ${sectionHead({ eyebrow: "История", title: "Как мы к этому пришли" })}
+    ${sectionHead({ title: "Как мы к этому пришли" })}
     <ol class="timeline">
       ${timeline}
     </ol>
@@ -493,7 +474,6 @@ ${pageHero({
 <section class="section">
   <div class="container">
     ${sectionHead({
-      eyebrow: "Как мы работаем",
       title: "Пять понятных этапов",
       note: "Каждый шаг зафиксирован в договоре. Вы всегда знаете, что происходит на объекте и сколько это стоит.",
     })}
@@ -503,7 +483,7 @@ ${pageHero({
 
 <section class="section section--alt">
   <div class="container">
-    ${sectionHead({ eyebrow: "Отзывы", title: "Что говорят наши клиенты" })}
+    ${sectionHead({ title: "Что говорят наши клиенты" })}
     ${reviewsBlock(reviews)}
   </div>
 </section>
@@ -528,7 +508,7 @@ function buildContacts() {
     { icon: "clock", t: "Режим работы", v: site.hours, d: "Замер возможен и в выходной по договорённости" },
   ]
     .map(
-      (c, i) => `<li class="contact-card" data-reveal${i % 2 ? ` data-reveal-delay="80"` : ""}>
+      (c) => `<li class="contact-card">
         <span class="contact-card__icon">${icon(c.icon)}</span>
         <h3>${c.t}</h3>
         <p class="contact-card__value">${c.v}</p>
@@ -541,7 +521,6 @@ function buildContacts() {
 ${breadcrumbs([{ href: "index.html", label: "Главная" }, { label: "Контакты" }])}
 
 ${pageHero({
-  eyebrow: "Контакты",
   title: "Свяжитесь с нами",
   lead: "Позвоните или оставьте заявку — перезвоним в течение 15 минут в рабочее время. Выезд замерщика по Ростову-на-Дону бесплатный и ни к чему не обязывает.",
   cta: false,
@@ -558,11 +537,10 @@ ${pageHero({
 <section class="section section--alt">
   <div class="container">
     ${sectionHead({
-      eyebrow: "На карте",
       title: "Где нас найти",
       note: "Офис на пр. Стачки, 20 — вход со стороны двора, второй этаж. Парковка вдоль здания.",
     })}
-    <div class="map-placeholder" data-reveal>
+    <div class="map-placeholder">
       ${icon("pin", "map-placeholder__pin")}
       <b>${site.address}</b>
       <span>В демонстрационной версии карта не подключена</span>
@@ -572,8 +550,8 @@ ${pageHero({
 
 <section class="section">
   <div class="container container--narrow">
-    ${sectionHead({ eyebrow: "Реквизиты", title: "Работаем официально" })}
-    <dl class="requisites" data-reveal>
+    ${sectionHead({ title: "Работаем официально" })}
+    <dl class="requisites">
       <div><dt>Наименование</dt><dd>ООО «Ростов Ремонт»</dd></div>
       <div><dt>ИНН / КПП</dt><dd>6100000000 / 610001001</dd></div>
       <div><dt>ОГРН</dt><dd>1146100000000</dd></div>
@@ -581,7 +559,7 @@ ${pageHero({
       <div><dt>Документы</dt><dd>Договор подряда, смета, акты КС-2 и КС-3</dd></div>
       <div><dt>Оплата</dt><dd>Наличные, карта, безналичный расчёт для юрлиц</dd></div>
     </dl>
-    <p class="price-note" data-reveal>${icon("doc")} Реквизиты в демонстрационной версии условные.</p>
+    <p class="price-note">${icon("doc")} Реквизиты в демонстрационной версии условные.</p>
   </div>
 </section>
 

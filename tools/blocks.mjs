@@ -7,7 +7,7 @@ import { site, services, steps, reviews, advantages, videoProjects, legalRevisio
 import { icon } from "./layout.mjs";
 
 /* ===== Шапка внутренней страницы ===== */
-export function pageHero({ eyebrow, title, lead, facts = [], photo = "", alt = "", cta = true, base = "" }) {
+export function pageHero({ title, lead, facts = [], photo = "", alt = "", cta = true, base = "" }) {
   const factsHtml = facts.length
     ? `<ul class="page-hero__facts">
           ${facts.map((f) => `<li><b>${f.b}</b><span>${f.s}</span></li>`).join("\n          ")}
@@ -22,15 +22,14 @@ export function pageHero({ eyebrow, title, lead, facts = [], photo = "", alt = "
     : "";
 
   const media = photo
-    ? `<div class="page-hero__media" data-reveal data-reveal-delay="120">
+    ? `<div class="page-hero__media">
         <img src="${photo}" alt="${alt}" width="1100" height="825" loading="eager">
       </div>`
     : "";
 
   return `<section class="page-hero${photo ? "" : " page-hero--plain"}">
   <div class="container page-hero__inner">
-    <div class="page-hero__text" data-reveal>
-      <span class="eyebrow">${eyebrow}</span>
+    <div class="page-hero__text">
       <h1 class="page-hero__title">${title}</h1>
       <p class="page-hero__lead">${lead}</p>
       ${ctaHtml}
@@ -47,7 +46,7 @@ export function pageHero({ eyebrow, title, lead, facts = [], photo = "", alt = "
 export function serviceGrid(list, dir = "uslugi/") {
   const cards = list
     .map(
-      (s, i) => `<article class="service-card" data-reveal${i % 3 ? ` data-reveal-delay="${(i % 3) * 80}"` : ""}>
+      (s) => `<article class="service-card">
         <div class="service-card__icon">${icon(s.icon)}</div>
         <h3><a href="${dir}${s.slug}.html" class="stretch">${s.menu}</a></h3>
         <p>${s.lead}</p>
@@ -64,7 +63,7 @@ export function serviceGrid(list, dir = "uslugi/") {
 export function videoGrid(base = "") {
   const cards = videoProjects
     .map(
-      (p, i) => `<article class="project project--video" data-reveal${i ? ` data-reveal-delay="${i * 80}"` : ""}>
+      (p) => `<article class="project project--video">
         <div class="project__media">
           <video class="project__video" muted loop playsinline preload="none" poster="${base}${p.poster}" aria-label="${p.alt}">
             <source src="${base}${p.video}" type="video/mp4">
@@ -104,7 +103,7 @@ export function workGallery(groups) {
         .join("\n        ");
 
       return `<section class="work-group" id="work-${group.id}">
-      <div class="work-group__head" data-reveal>
+      <div class="work-group__head">
         <h2>${group.title}</h2>
         <p>${group.note}</p>
         <span>${group.photos.length} фото</span>
@@ -116,7 +115,7 @@ export function workGallery(groups) {
     })
     .join("\n\n    ");
 
-  return `<nav class="work-nav" aria-label="Разделы портфолио" data-reveal>
+  return `<nav class="work-nav" aria-label="Разделы портфолио">
       ${nav}
     </nav>
 
@@ -127,7 +126,7 @@ export function workGallery(groups) {
 export function stepsBlock() {
   const items = steps
     .map(
-      (s, i) => `<li class="step" data-reveal${i ? ` data-reveal-delay="${i * 80}"` : ""}>
+      (s, i) => `<li class="step">
         <span class="step__num">${String(i + 1).padStart(2, "0")}</span>
         <h3>${s.t}</h3>
         <p>${s.d}</p>
@@ -143,7 +142,7 @@ export function stepsBlock() {
 export function reviewsBlock(list = reviews.slice(0, 3)) {
   const items = list
     .map(
-      (r, i) => `<figure class="review" data-reveal${i % 3 ? ` data-reveal-delay="${(i % 3) * 80}"` : ""}>
+      (r) => `<figure class="review">
         <div class="review__stars" aria-label="Оценка 5 из 5">★★★★★</div>
         <blockquote>${r.text}</blockquote>
         <figcaption><b>${r.name}</b><span>${r.meta}</span></figcaption>
@@ -165,7 +164,7 @@ export function advantagesBlock() {
       </li>`
     )
     .join("\n      ");
-  return `<ul class="features" data-reveal>
+  return `<ul class="features">
       ${items}
     </ul>`;
 }
@@ -181,7 +180,7 @@ export function priceTable(rows, caption = "") {
         </tr>`
     )
     .join("\n        ");
-  return `<div class="price-table__wrap" data-reveal>
+  return `<div class="price-table__wrap">
       <table class="price-table">
         ${caption ? `<caption>${caption}</caption>` : ""}
         <thead>
@@ -198,7 +197,7 @@ export function priceTable(rows, caption = "") {
 export function faqBlock(items) {
   const list = items
     .map(
-      (f, i) => `<details class="faq__item" data-reveal${i ? ` data-reveal-delay="${Math.min(i, 3) * 60}"` : ""}>
+      (f) => `<details class="faq__item">
         <summary>
           <span>${f.q}</span>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
@@ -216,7 +215,7 @@ export function faqBlock(items) {
 export function ctaBlock({ base = "", title = "Расскажите о вашем объекте", note = "Оставьте заявку — перезвоним в течение 15 минут, ответим на вопросы и предложим бесплатный выезд замерщика. Без навязчивых звонков.", subject = "" } = {}) {
   return `<section class="section section--cta" id="zayavka">
   <div class="container">
-    <div class="cta-card" data-reveal>
+    <div class="cta-card">
       <div class="cta-card__text">
         <h2 class="section__title">${title}</h2>
         <p class="section__note">${note}</p>
@@ -260,9 +259,8 @@ export function ctaBlock({ base = "", title = "Расскажите о ваше�
 }
 
 /* ===== Заголовок секции ===== */
-export function sectionHead({ eyebrow, title, note = "", link = null, row = false }) {
-  const heading = `<span class="eyebrow">${eyebrow}</span>
-        <h2 class="section__title">${title}</h2>${note ? `\n        <p class="section__note">${note}</p>` : ""}`;
+export function sectionHead({ title, note = "", link = null, row = false }) {
+  const heading = `<h2 class="section__title">${title}</h2>${note ? `\n        <p class="section__note">${note}</p>` : ""}`;
 
   // В «строчном» варианте заголовок и ссылка разъезжаются по краям,
   // поэтому текст заворачивается в дополнительный <div>.
@@ -273,7 +271,7 @@ export function sectionHead({ eyebrow, title, note = "", link = null, row = fals
       ${link ? `<a href="${link.href}" class="link-arrow">${link.label}${icon("arrow")}</a>` : ""}`
     : heading;
 
-  return `<div class="section__head${row ? " section__head--row" : ""}" data-reveal>
+  return `<div class="section__head${row ? " section__head--row" : ""}">
       ${inner}
     </div>`;
 }
@@ -286,7 +284,7 @@ export function relatedBlock(slugs, dir = "uslugi/", { alt = false } = {}) {
   if (!list.length) return "";
   const cards = list
     .map(
-      (s, i) => `<a href="${dir}${s.slug}.html" class="related-card" data-reveal${i ? ` data-reveal-delay="${i * 80}"` : ""}>
+      (s) => `<a href="${dir}${s.slug}.html" class="related-card">
         <span class="related-card__icon">${icon(s.icon)}</span>
         <b>${s.menu}</b>
         <small>${s.price}</small>
@@ -296,8 +294,7 @@ export function relatedBlock(slugs, dir = "uslugi/", { alt = false } = {}) {
     .join("\n      ");
   return `<section class="section${alt ? " section--alt" : ""}">
   <div class="container">
-    <div class="section__head" data-reveal>
-      <span class="eyebrow">Смотрите также</span>
+    <div class="section__head">
       <h2 class="section__title">Смежные услуги</h2>
     </div>
     <div class="related-grid">

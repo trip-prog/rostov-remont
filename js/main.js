@@ -233,40 +233,6 @@ if (cookieBanner) {
   });
 }
 
-/* ===== Появление блоков при прокрутке ===== */
-const reveals = $$("[data-reveal]");
-const revealNow = (el) => el.classList.add("is-revealed");
-
-if (reduceMotion || !("IntersectionObserver" in window)) {
-  reveals.forEach(revealNow);
-} else {
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          revealNow(entry.target);
-          observer.unobserve(entry.target);
-        }
-      });
-    },
-    { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
-  );
-
-  reveals.forEach((el) => {
-    const delay = el.dataset.revealDelay;
-    if (delay) el.style.setProperty("--reveal-delay", delay + "ms");
-    observer.observe(el);
-  });
-
-  // Страховка: если наблюдатель почему-то не сработал (бывает во встроенных
-  // webview), показываем всё, чтобы контент не остался скрытым.
-  setTimeout(() => {
-    if (!reveals.some((el) => el.classList.contains("is-revealed"))) {
-      reveals.forEach(revealNow);
-    }
-  }, 1500);
-}
-
 /* ===== Видео в портфолио =====
    Десктоп (мышь): ролик играет только пока на карточке курсор.
    Тач-устройства: автозапуск, пока карточка на экране. */

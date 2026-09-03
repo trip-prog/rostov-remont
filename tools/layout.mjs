@@ -8,7 +8,7 @@ import { site, icons, services, categories, mainNav, legalDocs } from "./site.da
 
 // Версия ссылок на css/js. Поднимается при изменении стилей или скриптов,
 // чтобы у вернувшихся посетителей не осталась старая версия в кэше.
-export const ASSET_VERSION = "9";
+export const ASSET_VERSION = "10";
 
 /** Иконка в единой обёртке: тонкая линия, наследует цвет текста. */
 export const icon = (name, cls = "") =>
@@ -41,15 +41,14 @@ function head({ title, description, base, canonical }) {
   <title>${title}</title>
   <meta name="robots" content="noindex">
   <meta name="description" content="${description}">
-  <meta name="theme-color" content="#fdfbf6">
+  <meta name="theme-color" content="#f6f6f3">
   <meta property="og:title" content="${title}">
   <meta property="og:description" content="${description}">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="ru_RU">${canonical ? `\n  <link rel="canonical" href="${canonical}">` : ""}
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@1,500;1,600&display=swap" rel="stylesheet">
-  <script>document.documentElement.classList.add("js");</script>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="${base}css/style.css?v=${ASSET_VERSION}">
   <link rel="icon" href="${favicon}">`;
 }
