@@ -342,9 +342,11 @@ input, textarea { font: inherit; }
 
 .drawer__body {
   flex: 1;
+  display: grid;
+  align-items: center;
   overflow-y: auto;
   overscroll-behavior: contain;
-  padding: 22px 24px 28px;
+  padding: 36px 32px;
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
 }
@@ -356,35 +358,26 @@ input, textarea { font: inherit; }
 
 .drawer__sections {
   display: grid;
-  gap: 2px;
+  width: 100%;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
 }
 .drawer__section-link {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 11px 14px;
-  border-radius: 11px;
-  font-size: 19px;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  color: #fff;
-  transition: background 0.2s var(--ease), color 0.2s var(--ease), padding 0.2s var(--ease);
-}
-.drawer__section-link svg {
-  width: 19px; height: 19px;
-  opacity: 0;
-  color: var(--gold-bright);
-  transform: translateX(-6px);
-  transition: opacity 0.2s var(--ease), transform 0.2s var(--ease);
+  display: block;
+  padding: 13px 8px 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  text-align: center;
+  font-size: clamp(23px, 5vw, 28px);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+  color: #f4eee4;
+  transition: color 0.2s var(--ease), background 0.2s var(--ease);
 }
 .drawer__section-link:hover {
-  background: rgba(255, 255, 255, 0.06);
-  padding-left: 18px;
+  background: rgba(255, 255, 255, 0.045);
+  color: var(--gold-bright);
 }
-.drawer__section-link:hover svg { opacity: 1; transform: none; }
 .drawer__section-link.is-active { color: var(--gold-bright); }
-.drawer__section-link.is-active svg { opacity: 1; transform: none; }
 
 .drawer__foot {
   flex: none;
@@ -538,7 +531,16 @@ input, textarea { font: inherit; }
   align-items: center;
 }
 .page-hero--plain .page-hero__inner { grid-template-columns: 1fr; }
-.page-hero--plain .page-hero__text { max-width: 760px; }
+.page-hero--plain .page-hero__text {
+  width: 100%;
+  max-width: 900px;
+  margin-inline: auto;
+  text-align: center;
+}
+.page-hero--plain .page-hero__lead { margin-inline: auto; }
+.page-hero--plain .page-hero__cta,
+.page-hero--plain .page-hero__facts { justify-content: center; }
+.page-hero--plain .page-hero__facts li { flex: 0 1 220px; }
 
 .page-hero__title {
   font-size: clamp(31px, 4.4vw, 50px);

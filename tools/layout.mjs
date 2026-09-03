@@ -8,7 +8,7 @@ import { site, icons, services, categories, mainNav, legalDocs } from "./site.da
 
 // Версия ссылок на css/js. Поднимается при изменении стилей или скриптов,
 // чтобы у вернувшихся посетителей не осталась старая версия в кэше.
-export const ASSET_VERSION = "8";
+export const ASSET_VERSION = "9";
 
 /** Иконка в единой обёртке: тонкая линия, наследует цвет текста. */
 export const icon = (name, cls = "") =>
@@ -91,7 +91,7 @@ function drawer(ctx) {
     .map((l) => {
       const id = l.href.replace(/(^|\/)index\.html$/, "$1").replace(/\.html$/, "") || "index";
       const is = active === id || (active === "uslugi-item" && id === "uslugi/");
-      return `<a href="${href(l.href, base)}" class="drawer__section-link${is ? " is-active" : ""}">${l.label}${icon("arrow")}</a>`;
+      return `<a href="${href(l.href, base)}" class="drawer__section-link${is ? " is-active" : ""}"${is ? ' aria-current="page"' : ""}>${l.label}</a>`;
     })
     .join("\n          ");
 
