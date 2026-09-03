@@ -288,6 +288,40 @@ if (portfolioVideos.length) {
   // без IntersectionObserver тач-устройствам остаётся постер — секция не ломается
 }
 
+/* ===== Просмотр фотографий работ ===== */
+const workLightbox = $("#work-lightbox");
+if (workLightbox && typeof workLightbox.showModal === "function") {
+  const gallery = $(".section--works");
+  const image = $("#work-lightbox-image");
+  const caption = $("#work-lightbox-caption");
+  const close = $("#work-lightbox-close");
+  let opener = null;
+
+  gallery.addEventListener("click", (event) => {
+    const link = event.target.closest?.(".work-shot a");
+    if (!link) return;
+
+    event.preventDefault();
+    const thumb = $("img", link);
+    opener = link;
+    image.src = link.href;
+    image.alt = thumb?.alt || "Фотография выполненной работы";
+    caption.textContent = $("figcaption", link.closest(".work-shot"))?.textContent || "";
+    document.body.classList.add("is-locked");
+    workLightbox.showModal();
+  });
+
+  close.addEventListener("click", () => workLightbox.close());
+  workLightbox.addEventListener("click", (event) => {
+    if (event.target === workLightbox) workLightbox.close();
+  });
+  workLightbox.addEventListener("close", () => {
+    document.body.classList.remove("is-locked");
+    image.removeAttribute("src");
+    opener?.focus();
+  });
+}
+
 /* ===== Сборка комнаты при прокрутке (только главная) ===== */
 const assembly = $("#assembly");
 if (assembly) {

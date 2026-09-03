@@ -95,7 +95,7 @@ export function workGallery(groups) {
     .map((group) => {
       const photos = group.photos
         .map((photo) => `<figure class="work-shot">
-          <a href="${photo.src}" target="_blank" rel="noopener" aria-label="Открыть фотографию: ${photo.caption}">
+          <a href="${photo.src}" aria-haspopup="dialog" aria-controls="work-lightbox" aria-label="Открыть фотографию: ${photo.caption}">
             <img src="${photo.src}" alt="${photo.alt}" loading="lazy" decoding="async">
           </a>
           <figcaption>${photo.caption}</figcaption>
@@ -119,7 +119,17 @@ export function workGallery(groups) {
       ${nav}
     </nav>
 
-    ${sections}`;
+    ${sections}
+
+    <dialog class="lightbox" id="work-lightbox" aria-labelledby="work-lightbox-caption">
+      <button class="lightbox__close" id="work-lightbox-close" type="button" aria-label="Закрыть фотографию">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+      <div class="lightbox__content">
+        <img class="lightbox__image" id="work-lightbox-image" alt="">
+        <p class="lightbox__caption" id="work-lightbox-caption"></p>
+      </div>
+    </dialog>`;
 }
 
 /* ===== Этапы работы ===== */

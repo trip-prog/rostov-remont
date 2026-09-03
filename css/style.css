@@ -690,6 +690,57 @@ input, textarea { font: inherit; }
   line-height: 1.5;
 }
 
+.lightbox {
+  width: 100vw;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  color: #fff;
+  background: transparent;
+}
+.lightbox[open] { display: grid; place-items: center; }
+.lightbox::backdrop { background: rgba(17, 17, 14, 0.94); }
+.lightbox__content {
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+  width: min(92vw, 1400px);
+  padding: 64px 20px 24px;
+}
+.lightbox__image {
+  display: block;
+  max-width: 100%;
+  max-height: calc(100dvh - 124px);
+  object-fit: contain;
+}
+.lightbox__caption {
+  color: #ddd5c7;
+  font-size: 15px;
+  text-align: center;
+}
+.lightbox__close {
+  position: fixed;
+  z-index: 1;
+  top: 18px;
+  right: 18px;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  border-radius: 50%;
+  color: #fff;
+  background: #24231f;
+  transition: color 0.2s var(--ease), border-color 0.2s var(--ease);
+}
+.lightbox__close:hover { color: var(--gold-bright); border-color: var(--gold-bright); }
+.lightbox__close svg { width: 22px; height: 22px; }
+
 .portfolio__grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
