@@ -3,7 +3,7 @@
  * Каждая функция возвращает готовый HTML-фрагмент.
  */
 
-import { site, services, steps, reviews, advantages, projectFilters, videoProjects, legalRevision } from "./site.data.mjs";
+import { site, services, steps, reviews, advantages, videoProjects, legalRevision } from "./site.data.mjs";
 import { icon } from "./layout.mjs";
 
 /* ===== Шапка внутренней страницы ===== */
@@ -60,25 +60,6 @@ export function serviceGrid(list, dir = "uslugi/") {
     </div>`;
 }
 
-/* ===== Сетка проектов ===== */
-export function projectGrid(list, { filterable = false } = {}) {
-  const cards = list
-    .map(
-      (p, i) => `<article class="project" data-reveal${i % 3 ? ` data-reveal-delay="${(i % 3) * 80}"` : ""}${filterable ? ` data-filter="${p.filter}"` : ""}>
-        <div class="project__media"><img src="${p.photo}" alt="${p.alt}" loading="lazy" width="800" height="600"></div>
-        <div class="project__body">
-          <span class="project__tag">${p.tag}</span>
-          <h3>${p.title}</h3>
-          <p class="project__meta">${p.meta}</p>
-        </div>
-      </article>`
-    )
-    .join("\n      ");
-  return `<div class="portfolio__grid"${filterable ? ' id="portfolio-grid"' : ""}>
-      ${cards}
-    </div>`;
-}
-
 /* ===== Сетка видеопроектов ===== */
 export function videoGrid(base = "") {
   const cards = videoProjects
@@ -105,16 +86,41 @@ export function videoGrid(base = "") {
     </div>`;
 }
 
-export function projectFilterBar() {
-  const chips = projectFilters
-    .map(
-      (f, i) =>
-        `<button type="button" class="chip${i === 0 ? " is-active" : ""}" data-filter-btn="${f.id}"${i === 0 ? ' aria-pressed="true"' : ' aria-pressed="false"'}>${f.label}</button>`
-    )
+/* ===== Фотогалерея реальных работ ===== */
+export function workGallery(groups) {
+  const nav = groups
+    .map((group) => `<a href="#work-${group.id}" class="work-nav__link"><span>${group.short}</span><small>${group.photos.length}</small></a>`)
     .join("\n      ");
-  return `<div class="chips" role="group" aria-label="Фильтр проектов" data-reveal>
-      ${chips}
-    </div>`;
+
+  const sections = groups
+    .map((group) => {
+      const photos = group.photos
+        .map((photo) => `<figure class="work-shot">
+          <a href="${photo.src}" target="_blank" rel="noopener" aria-label="Открыть фотографию: ${photo.caption}">
+            <img src="${photo.src}" alt="${photo.alt}" loading="lazy" decoding="async">
+          </a>
+          <figcaption>${photo.caption}</figcaption>
+        </figure>`)
+        .join("\n        ");
+
+      return `<section class="work-group" id="work-${group.id}">
+      <div class="work-group__head" data-reveal>
+        <h2>${group.title}</h2>
+        <p>${group.note}</p>
+        <span>${group.photos.length} фото</span>
+      </div>
+      <div class="work-gallery">
+        ${photos}
+      </div>
+    </section>`;
+    })
+    .join("\n\n    ");
+
+  return `<nav class="work-nav" aria-label="Разделы портфолио" data-reveal>
+      ${nav}
+    </nav>
+
+    ${sections}`;
 }
 
 /* ===== Этапы работы ===== */

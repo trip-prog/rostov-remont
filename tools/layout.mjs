@@ -8,7 +8,7 @@ import { site, icons, services, categories, mainNav, legalDocs } from "./site.da
 
 // Версия ссылок на css/js. Поднимается при изменении стилей или скриптов,
 // чтобы у вернувшихся посетителей не осталась старая версия в кэше.
-export const ASSET_VERSION = "7";
+export const ASSET_VERSION = "8";
 
 /** Иконка в единой обёртке: тонкая линия, наследует цвет текста. */
 export const icon = (name, cls = "") =>
@@ -54,9 +54,7 @@ function head({ title, description, base, canonical }) {
   <link rel="icon" href="${favicon}">`;
 }
 
-/* ===== Шапка =====
-   Слева логотип, по центру короткое меню, справа телефон и кнопка «Меню»,
-   открывающая выезжающую панель со всеми услугами. */
+/* ===== Шапка ===== */
 function header(ctx) {
   const { base, active } = ctx;
   const links = mainNav
@@ -85,9 +83,7 @@ function header(ctx) {
 </header>`;
 }
 
-/* ===== Выезжающая панель справа =====
-   Полная навигация: разделы сайта, все услуги по категориям и контакты.
-   Ссылки лежат в HTML (а не строятся скриптом), чтобы работать без JS. */
+/* ===== Выезжающая панель справа ===== */
 function drawer(ctx) {
   const { base, active } = ctx;
 
@@ -96,30 +92,6 @@ function drawer(ctx) {
       const id = l.href.replace(/(^|\/)index\.html$/, "$1").replace(/\.html$/, "") || "index";
       const is = active === id || (active === "uslugi-item" && id === "uslugi/");
       return `<a href="${href(l.href, base)}" class="drawer__section-link${is ? " is-active" : ""}">${l.label}${icon("arrow")}</a>`;
-    })
-    .join("\n          ");
-
-  const groups = categories
-    .map((cat) => {
-      const items = services
-        .filter((s) => s.category === cat.id)
-        .map((s) => {
-          const is = active === "uslugi-item" && ctx.slug === s.slug;
-          return `<li><a href="${href(`uslugi/${s.slug}.html`, base)}" class="drawer__service${is ? " is-active" : ""}">
-                <span class="drawer__service-icon">${icon(s.icon)}</span>
-                <span class="drawer__service-text">
-                  <b>${s.menu}</b>
-                  <small>${s.price}</small>
-                </span>
-              </a></li>`;
-        })
-        .join("\n            ");
-      return `<div class="drawer__group">
-            <h3 class="drawer__group-title">${cat.title}</h3>
-            <ul class="drawer__services">
-            ${items}
-            </ul>
-          </div>`;
     })
     .join("\n          ");
 
@@ -136,11 +108,6 @@ function drawer(ctx) {
     <nav class="drawer__sections" aria-label="Разделы сайта">
           ${sections}
     </nav>
-
-    <div class="drawer__catalog">
-      <span class="drawer__eyebrow">Что мы делаем</span>
-          ${groups}
-    </div>
   </div>
 
   <div class="drawer__foot">

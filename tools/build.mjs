@@ -9,16 +9,16 @@ import { writeFile, mkdir } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
-import { site, services, categories, projects, reviews, serviceBySlug } from "./site.data.mjs";
+import { site, services, categories, workGroups, reviews, serviceBySlug } from "./site.data.mjs";
 import { page, breadcrumbs, icon } from "./layout.mjs";
 import {
-  pageHero, serviceGrid, projectGrid, projectFilterBar, stepsBlock,
+  pageHero, serviceGrid, stepsBlock,
   reviewsBlock, advantagesBlock, priceTable, faqBlock, ctaBlock,
-  sectionHead, relatedBlock, videoGrid,
+  sectionHead, relatedBlock, videoGrid, workGallery,
 } from "./blocks.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const SITE_URL = "https://trip-prog.github.io/rostov-remont-lab/";
+const SITE_URL = "https://trip-prog.github.io/rostov-remont/";
 
 const written = [];
 async function emit(relPath, html) {
@@ -48,7 +48,7 @@ function buildHome() {
     </div>
     <div class="hero__media" data-reveal data-reveal-delay="100">
       <div class="hero__photo">
-        <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1100&q=80" alt="Светлая гостиная после ремонта под ключ" loading="eager" width="1100" height="1019">
+        <img src="работы/Плиточные работы/photo_4_2026-09-03_11-58-03.jpg" alt="Готовая ванная комната с крупноформатной плиткой" loading="eager" width="1024" height="768">
       </div>
       <div class="hero__badge">
         <b>${site.warranty.split(" ")[0]} лет</b>
@@ -127,9 +127,9 @@ function buildHome() {
   <div class="container">
     ${sectionHead({
       eyebrow: "Портфолио",
-      title: "Выполненные проекты",
-      note: "Реальные объекты, сданные за последние два года. Показываем метраж и итоговую стоимость работ.",
-      link: { href: "portfolio.html", label: "Смотреть все проекты" },
+      title: "Работы без ретуши",
+      note: "Показываем не только красивый финал, но и то, что останется за стенами после ремонта.",
+      link: { href: "portfolio.html", label: "Смотреть 27 фотографий" },
       row: true,
     })}
     ${videoGrid()}
@@ -314,35 +314,28 @@ ${breadcrumbs([{ href: "index.html", label: "Главная" }, { label: "Пор
 ${pageHero({
   eyebrow: "Портфолио",
   title: "Наши работы",
-  lead: "Реальные объекты, сданные за последние два года. Указываем метраж, бюджет работ и фактический срок — без округлений в удобную сторону.",
+  lead: "Чистовая отделка и инженерия до того, как их закроют стены. Все фотографии сделаны на наших объектах — без фотостоков и ретуши.",
   facts: [
-    { b: "850+", s: "объектов с 2014 года" },
-    { b: "95%", s: "клиентов рекомендуют" },
-    { b: "0", s: "сорванных сроков за год" },
+    { b: "27", s: "реальных фотографий" },
+    { b: "5", s: "видов работ" },
+    { b: "Ростов", s: "наши объекты" },
   ],
 })}
 
-<section class="section">
+<section class="section section--works">
   <div class="container">
-    ${sectionHead({
-      eyebrow: "Видео",
-      title: "Съёмка с объектов",
-      note: "Обход готовых квартир без монтажных склеек. На компьютере ролик запускается при наведении, на телефоне — сам.",
-    })}
-    ${videoGrid()}
+    ${workGallery(workGroups)}
   </div>
 </section>
 
 <section class="section section--alt">
   <div class="container">
     ${sectionHead({
-      eyebrow: "Все работы",
-      title: "Проекты по типам ремонта",
-      note: "Выберите категорию, чтобы посмотреть похожие на вашу задачу объекты.",
+      eyebrow: "Видео",
+      title: "Объекты в движении",
+      note: "Короткие обходы готовых квартир. На компьютере ролик запускается при наведении, на телефоне — сам.",
     })}
-    ${projectFilterBar()}
-    ${projectGrid(projects, { filterable: true })}
-    <p class="portfolio__empty" id="portfolio-empty" hidden>В этой категории пока нет проектов.</p>
+    ${videoGrid()}
   </div>
 </section>
 

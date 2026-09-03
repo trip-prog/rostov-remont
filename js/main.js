@@ -267,35 +267,6 @@ if (reduceMotion || !("IntersectionObserver" in window)) {
   }, 1500);
 }
 
-/* ===== Фильтр портфолио ===== */
-const grid = $("#portfolio-grid");
-if (grid) {
-  const buttons = $$("[data-filter-btn]");
-  const cards = $$(".project", grid);
-  const empty = $("#portfolio-empty");
-
-  buttons.forEach((btn) =>
-    btn.addEventListener("click", () => {
-      const value = btn.dataset.filterBtn;
-
-      buttons.forEach((b) => {
-        const active = b === btn;
-        b.classList.toggle("is-active", active);
-        b.setAttribute("aria-pressed", String(active));
-      });
-
-      let shown = 0;
-      cards.forEach((card) => {
-        const match = value === "all" || card.dataset.filter === value;
-        card.hidden = !match;
-        if (match) shown++;
-      });
-
-      if (empty) empty.hidden = shown > 0;
-    })
-  );
-}
-
 /* ===== Видео в портфолио =====
    Десктоп (мышь): ролик играет только пока на карточке курсор.
    Тач-устройства: автозапуск, пока карточка на экране. */
