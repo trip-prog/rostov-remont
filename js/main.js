@@ -235,6 +235,30 @@ document.addEventListener("visibilitychange", () => {
   if (document.hidden) portfolioVideos.forEach((video) => video.pause());
 });
 
+/* ===== Сборка комнаты: шесть этапов, без перехвата прокрутки ===== */
+const assembly = $("#assembly");
+if (assembly) {
+  const frames = $$(".assembly__frame", assembly);
+  const range = $("#assembly-range");
+  const next = $("#assembly-next");
+  const showAssembly = (value) => {
+    const index = Math.max(0, Math.min(frames.length - 1, Math.trunc(Number(value)) || 0));
+    frames.forEach((frame, i) => {
+      frame.classList.toggle("is-active", i === index);
+      frame.setAttribute("aria-hidden", String(i !== index));
+    });
+    range.value = String(index);
+    range.setAttribute("aria-valuetext", frames[index].alt);
+    $("#assembly-counter").textContent = `${index + 1} из ${frames.length}`;
+    $("#assembly-caption").textContent = frames[index].alt;
+    $("#assembly-note").textContent = frames[index].dataset.note;
+    next.textContent = index === frames.length - 1 ? "Посмотреть сначала" : "Следующий этап";
+  };
+  range.addEventListener("input", () => showAssembly(range.value));
+  next.addEventListener("click", () => showAssembly((Number(range.value) + 1) % frames.length));
+  showAssembly(range.value);
+}
+
 /* ===== Выбор направления работ. Без JavaScript остаются обычные якоря. ===== */
 const workFilters = $$("[data-work-filter]");
 const workGroups = $$("[data-work-group]");

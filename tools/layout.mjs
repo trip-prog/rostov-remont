@@ -8,7 +8,7 @@ import { site, icons, services, categories, mainNav, legalDocs } from "./site.da
 
 // Версия ссылок на css/js. Поднимается при изменении стилей или скриптов,
 // чтобы у вернувшихся посетителей не осталась старая версия в кэше.
-export const ASSET_VERSION = "20";
+export const ASSET_VERSION = "23";
 
 /** Иконка в единой обёртке: тонкая линия, наследует цвет текста. */
 export const icon = (name, cls = "") =>
@@ -46,7 +46,7 @@ function head({ title, description, base, canonical }) {
   <meta property="og:description" content="${description}">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="ru_RU">${canonical ? `\n  <link rel="canonical" href="${canonical}">` : ""}
-  <link rel="preload" href="${base}fonts/tenor-sans-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="${base}fonts/golos-text-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="${base}fonts/fonts.css?v=${ASSET_VERSION}">
   <link rel="stylesheet" href="${base}css/style.css?v=${ASSET_VERSION}">
   <link rel="icon" href="${favicon}">`;

@@ -90,3 +90,20 @@ const phoneCheck = runInNewContext(js.slice(js.indexOf("const phoneDigits ="), j
 for (const value of ["+7 (999) 123-45-67", "8 999 123 45 67", "9991234567"]) assert.equal(phoneCheck(value), true, value);
 for (const value of ["", "123", "+7 999 123-45-678", "abc9991234567", "69991234567"]) assert.equal(phoneCheck(value), false, value);
 console.log("Phone input: local formats and invalid values passed.");
+
+// Execute the same compact room-assembly controller used on the homepage.
+const stageFrames = Array.from({ length: 6 }, (_, i) => Object.assign(node({ note: `Detail ${i}` }), { alt: `Stage ${i}` }));
+const stageIds = Object.fromEntries(["assembly", "assembly-range", "assembly-next", "assembly-counter", "assembly-caption", "assembly-note"].map((id) => ["#" + id, node()]));
+stageIds["#assembly-range"].value = "0";
+runInNewContext(js.slice(js.indexOf("const assembly ="), js.indexOf("/* ===== Выбор направления работ.")), { $: (selector) => stageIds[selector], $$: () => stageFrames });
+assert.equal(stageIds["#assembly-counter"].textContent, "1 из 6");
+for (let i = 0; i < 5; i++) stageIds["#assembly-next"].handlers.click();
+assert.equal(stageIds["#assembly-caption"].textContent, "Stage 5");
+assert.equal(stageIds["#assembly-range"].attributes["aria-valuetext"], "Stage 5");
+assert.equal(stageFrames.filter((frame) => frame.attributes["aria-hidden"] === "false").length, 1);
+stageIds["#assembly-next"].handlers.click();
+assert.equal(stageIds["#assembly-range"].value, "0");
+stageIds["#assembly-range"].value = "3";
+stageIds["#assembly-range"].handlers.input();
+assert.equal(stageIds["#assembly-note"].textContent, "Detail 3");
+console.log("Room assembly: six stages, slider, restart and accessible state passed.");

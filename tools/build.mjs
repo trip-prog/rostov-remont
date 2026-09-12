@@ -13,7 +13,7 @@ import { site, services, categories, workGroups, serviceBySlug } from "./site.da
 import { page, breadcrumbs, icon } from "./layout.mjs";
 import {
   pageHero, serviceGrid, stepsBlock,
-  advantagesBlock, priceTable, faqBlock, ctaBlock,
+  priceTable, faqBlock, ctaBlock,
   sectionHead, relatedBlock, videoGrid, workGallery,
 } from "./blocks.mjs";
 
@@ -30,74 +30,58 @@ async function emit(relPath, html) {
 
 /* ================= ГЛАВНАЯ ================= */
 function buildHome() {
-  const featured = ["kapitalnyy-remont", "kosmeticheskiy-remont", "dizayn-proekt", "novostroyka", "vannaya", "plitka"].map((slug) => serviceBySlug[slug]);
+  const featured = ["kapitalnyy-remont", "kosmeticheskiy-remont", "novostroyka", "vannaya", "elektrika", "santehnika"].map((slug) => serviceBySlug[slug]);
   const tile = workGroups.find((group) => group.id === "tile");
   const electrical = workGroups.find((group) => group.id === "electrical");
+  const plumbing = workGroups.find((group) => group.id === "plumbing");
+  const stages = [
+    { title: "Квартира без отделки", note: "Начинаем с обмеров и плана: где будут перегородки, мебель, свет и розетки.", src: "img/stage-0.png" },
+    { title: "Черновые работы", note: "Прокладываем коммуникации, готовим стены и основание пола.", src: "img/stage-1.jpg" },
+    { title: "Чистовая отделка", note: "Укладываем покрытия, окрашиваем стены и оформляем потолок.", src: "img/stage-2.jpg" },
+    { title: "Мебель", note: "Устанавливаем встроенную мебель и расставляем основные предметы.", src: "img/stage-3.jpg" },
+    { title: "Освещение", note: "Добавляем светильники и проверяем, как свет работает в комнате.", src: "img/stage-4.jpg" },
+    { title: "Готовая комната", note: "Остаются текстиль, декор и приёмка результата.", src: "img/stage-5.jpg" },
+  ];
   const body = `
-<section class="home-hero">
-  <div class="container home-hero__inner">
-    <div class="home-hero__text">
-      <h1>Ваш дом.<br>Наше&nbsp;дело.</h1>
-      <p>Ремонт квартир под ключ в Ростове-на-Дону. От первой сметы до последней розетки.</p>
-      <div class="home-hero__actions">
-        <a class="btn btn--gold" href="#zayavka">Обсудить ремонт</a>
-        <a class="text-link" href="portfolio.html">Посмотреть работы</a>
-      </div>
-      <div class="home-hero__foot"><span>Квартиры и новостройки</span><span>Отдельные виды работ</span></div>
-    </div>
-    <figure class="home-hero__visual">
-      <img src="${tile.photos[3].src}" alt="${tile.photos[3].alt}" width="1024" height="768" fetchpriority="high">
-      <figcaption><span>Плитка, камень и дерево</span><a href="portfolio.html#work-tile">Посмотреть отделку ${icon("arrow")}</a></figcaption>
-    </figure>
-  </div>
-</section>
-<div class="container">${advantagesBlock()}</div>
-
-<section class="section">
+<section class="site-intro">
   <div class="container">
-    ${sectionHead({ title: "Результат. И всё, что за ним.", note: "Готовая отделка и скрытая инженерия на наших объектах.", row: true, link: { href: "portfolio.html", label: "Все работы" } })}
-    <div class="work-preview">
-      <a href="portfolio.html#work-tile" class="work-preview__item">
-        <img src="${tile.photos[2].src}" alt="${tile.photos[2].alt}" loading="lazy" width="720" height="1280">
-        <span><b>Чистовая отделка</b><small>Плитка и санузлы</small>${icon("arrow")}</span>
-      </a>
-      <a href="portfolio.html#work-electrical" class="work-preview__item">
-        <img src="${electrical.photos[1].src}" alt="${electrical.photos[1].alt}" loading="lazy" width="960" height="1280">
-        <span><b>То, что внутри</b><small>Электрика и инженерия</small>${icon("arrow")}</span>
-      </a>
+    <div class="intro-heading">
+      <h1>Ремонт квартир<br>в Ростове-на-Дону</h1>
+      <div><p>Квартира целиком, ванная или отдельные работы. Посмотрите, что мы делаем, и расскажите о своей задаче.</p><a class="btn btn--gold" href="#zayavka">Обсудить ремонт</a></div>
+    </div>
+    <div class="intro-project">
+      <a class="intro-project__photo" href="portfolio.html#work-tile"><img src="${tile.photos[3].src}" alt="${tile.photos[3].alt}" width="1024" height="768" fetchpriority="high"></a>
+      <div class="intro-project__info">
+        <h2>Отделка ванной</h2><p>Плитка под камень и дерево, подвесная тумба, подсветка и встроенные смесители.</p><a class="text-link" href="portfolio.html#work-tile">Все работы по плитке</a>
+        <div class="intro-project__next"><span>Есть и фотографии процесса</span><a href="portfolio.html#work-electrical"><img src="${electrical.photos[1].src}" alt="Разводка кабеля по потолку до отделки" width="960" height="1280" loading="lazy"><span>Электрика до отделки ${icon("arrow")}</span></a></div>
+      </div>
     </div>
   </div>
 </section>
-
-<section class="section section--alt">
+<section class="section home-services">
   <div class="container service-overview">
-    <div class="service-overview__intro">
-      <h2 class="section__title">Целая квартира.<br>Или одна задача.</h2>
-      <p class="section__note">Выберите подходящий формат. Состав работ, сроки и цены собрали на отдельных страницах.</p>
-      <a class="text-link" href="uslugi/index.html">Все ${services.length} услуг</a>
-    </div>
+    <div class="service-overview__intro"><h2 class="section__title">Что нужно сделать?</h2><p class="section__note">Можно заказать весь ремонт или поручить нам отдельный этап. Цены ниже — за работу, без материалов.</p><a class="text-link" href="uslugi/index.html">Все услуги и расценки</a></div>
     ${serviceGrid(featured)}
   </div>
 </section>
-
-<section class="section">
+<section class="section assembly" id="assembly" aria-labelledby="assembly-title">
   <div class="container">
-    ${sectionHead({ title: "Сначала договоримся.<br>Потом начнём.", note: "Пять этапов от знакомства с объектом до приёмки готового ремонта." })}
-    ${stepsBlock()}
+    <div class="assembly__heading"><div><h2 id="assembly-title" class="section__title">Из пустой комнаты<br>в готовую квартиру</h2><p class="section__note">Передвиньте ползунок, чтобы посмотреть этапы.</p></div><span class="assembly__disclaimer">Иллюстрация последовательности работ</span></div>
+    <div class="assembly__frames">${stages.map((stage, i) => `<img class="assembly__frame${i === 0 ? ' is-active' : ''}" src="${stage.src}" alt="${stage.title}" data-note="${stage.note}" width="1024" height="572" loading="lazy" decoding="async">`).join("")}</div>
+    <div class="assembly__controls"><label for="assembly-range">Этап <output id="assembly-counter" for="assembly-range">1 из 6</output></label><input id="assembly-range" type="range" min="0" max="5" step="1" value="0" aria-valuetext="Квартира без отделки"><button type="button" class="btn btn--white" id="assembly-next">Следующий этап ${icon("arrow")}</button></div>
+    <div class="assembly__caption" aria-live="polite"><h3 id="assembly-caption">${stages[0].title}</h3><p id="assembly-note">${stages[0].note}</p></div>
+    <noscript><p>На иллюстрации — комната до ремонта. Переключение этапов доступно с JavaScript.</p></noscript>
   </div>
 </section>
-
-<section class="section section--about">
-  <div class="container about__inner">
-    <h2 class="section__title">Хороший ремонт —<br>это ещё и спокойствие.</h2>
-    <div class="about__text">
-      <p class="section__note">Состав работ, стоимость и сроки закрепляем в договоре. Показываем чеки на материалы и присылаем фотоотчёты с объекта.</p>
-      <a href="o-kompanii.html" class="text-link">Как мы работаем</a>
-    </div>
+<section class="section">
+  <div class="container field-notes">
+    <div class="field-notes__text"><h2 class="section__title">До того,<br>как закрыли стены</h2><p class="section__note">Фотографии электрики и сантехники с наших объектов. Можно открыть снимок и рассмотреть соединения, трассы и выводы.</p><a class="text-link" href="portfolio.html">Открыть портфолио</a></div>
+    <a class="field-notes__photo" href="portfolio.html#work-electrical"><img src="${electrical.photos[3].src}" alt="${electrical.photos[3].alt}" width="960" height="1280" loading="lazy"><span>Разводка электрики по коридору</span></a>
+    <a class="field-notes__photo" href="portfolio.html#work-plumbing"><img src="${plumbing.photos[1].src}" alt="${plumbing.photos[1].alt}" width="960" height="1280" loading="lazy"><span>Коллекторный узел водоснабжения</span></a>
   </div>
 </section>
-${ctaBlock({ title: "Начнём с вашей квартиры?", note: "Расскажите, что хотите изменить. Обсудим объём работ, сроки и следующий шаг." })}`;
-  return page({ title: site.baseTitle, description: "Ремонт квартир в Ростове-на-Дону: фотографии работ, услуги и цены. ROSTOV REMONT — от черновых работ до чистовой отделки.", active: "index", canonical: SITE_URL, body });
+${ctaBlock({ title: "Обсудить ремонт", note: "Укажите площадь квартиры и что нужно сделать. Если есть план или фотографии, их можно отправить на почту." })}`;
+  return page({ title: site.baseTitle, description: "Ремонт квартир в Ростове-на-Дону. Фотографии готовой отделки и процесса работ, услуги и расценки ROSTOV REMONT.", active: "index", canonical: SITE_URL, body });
 }
 
 /* ================= КАТАЛОГ УСЛУГ ================= */
@@ -235,49 +219,13 @@ ${ctaBlock({ base: "../", title: "Обсудим вашу задачу?", subjec
 /* ================= ПОРТФОЛИО ================= */
 function buildPortfolio() {
   const groups = ["tile", "electrical", "plumbing", "walls", "plaster"].map((id) => workGroups.find((group) => group.id === id));
-  const featured = groups[0].photos[3];
-  const detail = groups[0].photos[2];
   const body = `
 ${breadcrumbs([{ href: "index.html", label: "Главная" }, { label: "Портфолио" }])}
-<section class="portfolio-intro">
-  <div class="container">
-    <div class="portfolio-intro__heading">
-      <h1>Хороший ремонт<br>виден в деталях.</h1>
-      <div><p>От готовой ванной до разводки за стенами. Показываем наши работы вблизи — такими, какие они есть.</p><a class="text-link" href="#works">Смотреть все фотографии</a></div>
-    </div>
-    <div class="portfolio-feature">
-      <figure class="portfolio-feature__main">
-        <a href="${featured.src}" data-work-photo data-group="tile" data-caption="${featured.caption}" aria-haspopup="dialog" aria-controls="work-lightbox" aria-label="Открыть фотографию: ${featured.caption}">
-          <img src="${featured.src}" alt="${featured.alt}" width="1024" height="768" fetchpriority="high">
-          <span class="portfolio-feature__zoom" aria-hidden="true">${icon("expand")}</span>
-        </a>
-        <figcaption><span>Плиточная отделка</span><span>Крупный формат, точные примыкания</span></figcaption>
-      </figure>
-      <figure class="portfolio-feature__detail">
-        <a href="${detail.src}" data-work-photo data-group="tile" data-caption="${detail.caption}" aria-haspopup="dialog" aria-controls="work-lightbox" aria-label="Открыть фотографию: ${detail.caption}">
-          <img src="${detail.src}" alt="${detail.alt}" width="720" height="1280">
-          <span class="portfolio-feature__zoom" aria-hidden="true">${icon("expand")}</span>
-        </a>
-        <figcaption>Камень, дерево и тёплый свет</figcaption>
-      </figure>
-    </div>
-    <div class="portfolio-intro__foot"><p>27 фотографий с объектов</p><p>Чистовая отделка и черновые работы</p><a class="text-link" href="#zayavka">Обсудить похожий ремонт</a></div>
-  </div>
-</section>
-<section class="section section--works" id="works">
-  <div class="container">
-    <h2 class="collection-title">Работы в подробностях</h2>
-    ${workGallery(groups)}
-  </div>
-</section>
-<section class="section section--alt">
-  <div class="container video-section">
-    ${sectionHead({ title: "Загляните внутрь.", note: "Три коротких видео с объектов. Запустите ролик, чтобы рассмотреть пространство." })}
-    ${videoGrid()}
-  </div>
-</section>
-${ctaBlock({ title: "Каким будет ваш ремонт?", note: "Расскажите о квартире и своих планах. Поможем разобраться с объёмом работ и стоимостью." })}`;
-  return page({ title: "Портфолио — выполненные ремонты квартир в Ростове-на-Дону | ROSTOV REMONT", description: "27 фотографий работ ROSTOV REMONT: плитка, электрика, сантехника, перегородки и штукатурка. Реальные детали ремонта и видео с объектов.", active: "portfolio", canonical: SITE_URL + "portfolio.html", body });
+<section class="portfolio-heading"><div class="container"><h1>Наши работы</h1><p>Готовые ванные, разводка коммуникаций, перегородки и штукатурка. Выберите вид работ или посмотрите все 27 фотографий.</p></div></section>
+<section class="section section--works" id="works"><div class="container">${workGallery(groups)}</div></section>
+<section class="section section--alt"><div class="container">${sectionHead({ title: "Видео готовых квартир", note: "Три коротких прохода по помещениям. Запустите видео, чтобы посмотреть отделку." })}${videoGrid()}</div></section>
+${ctaBlock({ title: "Обсудить похожий ремонт", note: "Напишите, какая работа вам понравилась и что хотите сделать у себя." })}`;
+  return page({ title: "Наши работы — ROSTOV REMONT", description: "27 фотографий работ: плитка, электрика, сантехника, перегородки и штукатурка. Готовая отделка и процесс ремонта.", active: "portfolio", canonical: SITE_URL + "portfolio.html", body });
 }
 
 /* ================= ЦЕНЫ ================= */
@@ -352,21 +300,21 @@ function buildAbout() {
   const body = `
 ${breadcrumbs([{ href: "index.html", label: "Главная" }, { label: "О компании" }])}
 ${pageHero({
-  title: "Ремонт — это<br>совместная работа.",
+  title: "Как мы работаем",
   lead: "Кому-то нужно обновить одну комнату, кому-то — обустроить квартиру с нуля. Разбираем задачу вместе: что оставить, что переделать и с чего начать.",
   photo: tile.photos[0].src,
   alt: tile.photos[0].alt,
 })}
 <section class="section section--alt">
   <div class="container approach">
-    <div><h2 class="section__title">Чтобы понимать<br>друг друга.</h2><p class="section__note">На ремонте достаточно решений. Договорённости должны помогать их принимать.</p></div>
+    <div><h2 class="section__title">Что обсуждаем перед ремонтом</h2><p class="section__note">Состав работ, материалы, сроки и оплата. Основные вопросы разбираем до выхода на объект.</p></div>
     <ul class="principles">${principles.map((p) => `<li class="principle"><h3>${p.t}</h3><p>${p.d}</p></li>`).join("")}</ul>
   </div>
 </section>
 <section class="section">
   <div class="container about-detail">
     <figure><img src="${plumbing.photos[1].src}" alt="${plumbing.photos[1].alt}" width="960" height="1280" loading="lazy"><figcaption>Коллекторный узел до закрытия коммуникаций</figcaption></figure>
-    <div><h2 class="section__title">Красивой должна быть<br>и работа внутри.</h2><p class="section__note">После ремонта трубы и провода почти не видны. В портфолио показываем их отдельно от готовых интерьеров — чтобы можно было рассмотреть монтаж вблизи.</p><a href="portfolio.html#work-plumbing" class="text-link">Рассмотреть инженерные работы</a></div>
+    <div><h2 class="section__title">Показываем скрытые работы</h2><p class="section__note">После ремонта трубы и провода почти не видны. В портфолио показываем их отдельно от готовых интерьеров — чтобы можно было рассмотреть монтаж вблизи.</p><a href="portfolio.html#work-plumbing" class="text-link">Рассмотреть инженерные работы</a></div>
   </div>
 </section>
 ${ctaBlock({ title: "Начнём со знакомства", note: "План квартиры, несколько фотографий или сохранённые примеры интерьеров помогут объяснить идею. Если их пока нет — достаточно описать задачу." })}`;
@@ -381,7 +329,7 @@ ${ctaBlock({ title: "Начнём со знакомства", note: "План к
 function buildContacts() {
   const body = `
 ${breadcrumbs([{ href: "index.html", label: "Главная" }, { label: "Контакты" }])}
-${pageHero({ title: "Давайте обсудим<br>вашу квартиру.", lead: "Можно начать с короткого звонка или письма. Расскажите, что хотите сделать и когда планируете ремонт.", cta: false })}
+${pageHero({ title: "Контакты", lead: "Можно начать с короткого звонка или письма. Расскажите, что хотите сделать и когда планируете ремонт.", cta: false })}
 <section class="section section--contact-details">
   <div class="container">
     <ul class="contact-grid">

@@ -90,11 +90,11 @@ export function workGallery(groups) {
     .join("\n      ");
 
   const sections = groups
-    .map((group) => {
+    .map((group, groupIndex) => {
       const photos = (group.id === "tile" ? [group.photos[3], ...group.photos.slice(0, 3)] : group.photos)
-        .map((photo) => `<figure class="work-shot">
+        .map((photo, photoIndex) => `<figure class="work-shot">
           <a href="${photo.src}" data-work-photo data-group="${group.id}" data-caption="${photo.caption}" aria-haspopup="dialog" aria-controls="work-lightbox" aria-label="Открыть фотографию: ${photo.caption}">
-            <img src="${photo.src}" alt="${photo.alt}" loading="lazy" decoding="async">
+            <img src="${photo.src}" alt="${photo.alt}" loading="${groupIndex === 0 && photoIndex === 0 ? "eager" : "lazy"}" decoding="async">
             <span class="work-shot__open" aria-hidden="true">${icon("expand")}</span>
           </a>
           <figcaption>${photo.caption}</figcaption>
