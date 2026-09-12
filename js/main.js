@@ -17,14 +17,6 @@ function showToast(message, duration = 4500) {
   showToast._t = setTimeout(() => toast.classList.remove("is-visible"), duration);
 }
 
-/* ===== Тень у шапки при прокрутке ===== */
-const header = $("#header");
-if (header) {
-  const onScroll = () => header.classList.toggle("is-scrolled", window.scrollY > 8);
-  onScroll();
-  window.addEventListener("scroll", onScroll, { passive: true });
-}
-
 /* ===== Выезжающее меню ===== */
 const drawer = $("#drawer");
 const overlay = $("#drawer-overlay");
@@ -34,6 +26,7 @@ const closeBtn = $("#menu-close");
 if (drawer && overlay && openBtn) {
   const FOCUSABLE = 'a[href], button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])';
   let lastFocused = null;
+  const background = $$(".header, main, .footer, #cookie-banner");
 
   const isOpen = () => drawer.classList.contains("is-open");
 
@@ -53,6 +46,7 @@ if (drawer && overlay && openBtn) {
     overlay.classList.add("is-open");
     document.body.classList.add("is-locked");
     openBtn.setAttribute("aria-expanded", "true");
+    background.forEach((el) => { el.inert = true; });
 
     const first = drawer.querySelector(FOCUSABLE);
     if (first) first.focus();
@@ -65,6 +59,7 @@ if (drawer && overlay && openBtn) {
     document.body.classList.remove("is-locked");
     document.body.style.paddingRight = "";
     openBtn.setAttribute("aria-expanded", "false");
+    background.forEach((el) => { el.inert = false; });
 
     const finish = () => {
       if (!isOpen()) {
@@ -114,26 +109,14 @@ if (drawer && overlay && openBtn) {
   });
 }
 
-/* ===== Маска телефона +7 (XXX) XXX-XX-XX ===== */
-function maskPhone(input) {
-  if (!input) return;
-  input.addEventListener("input", () => {
-    let digits = input.value.replace(/\D/g, "");
-    if (digits.startsWith("8")) digits = "7" + digits.slice(1);
-    if (!digits.startsWith("7")) digits = "7" + digits;
-    digits = digits.slice(0, 11);
-
-    let out = "+7";
-    if (digits.length > 1) out += " (" + digits.slice(1, 4);
-    if (digits.length >= 4) out += ") " + digits.slice(4, 7);
-    if (digits.length >= 7) out += "-" + digits.slice(7, 9);
-    if (digits.length >= 9) out += "-" + digits.slice(9, 11);
-    input.value = out;
-  });
-}
-
-const phoneValid = (value) => value.replace(/\D/g, "").length === 11;
-maskPhone($("#cf-phone"));
+/* Ввод без маски: можно вставить номер и свободно исправить любую цифру. */
+const phoneDigits = (value) => value.trim().replace(/[\s()+.\-]/g, "").replace(/^8(?=\d{10}$)/, "7");
+const phoneValid = (value) => /^(?:7\d{10}|\d{10})$/.test(phoneDigits(value));
+const phoneInput = $("#cf-phone");
+phoneInput?.addEventListener("input", () => {
+  phoneInput.removeAttribute("aria-invalid");
+  $("#cf-phone-error").textContent = "";
+});
 
 /* ===== Форма заявки (демо) ===== */
 const form = $("#contact-form");
@@ -157,15 +140,22 @@ if (form) {
 
     if (!consent.checked) {
       consentRow.classList.add("is-hint");
-      consentRow.scrollIntoView({ block: "center", behavior: "smooth" });
+      consentRow.scrollIntoView({ block: "center", behavior: reduceMotion ? "auto" : "smooth" });
       consent.focus();
       return;
     }
 
+    const name = $("#cf-name");
+    if (!name.value.trim()) {
+      showToast("Укажите ваше имя.");
+      name.focus();
+      return;
+    }
     const phone = $("#cf-phone");
     const error = $("#cf-phone-error");
     if (!phoneValid(phone.value)) {
-      error.textContent = "Введите телефон в формате +7 (XXX) XXX-XX-XX";
+      error.textContent = "Проверьте номер: например, +7 999 123-45-67.";
+      phone.setAttribute("aria-invalid", "true");
       phone.focus();
       return;
     }
@@ -175,9 +165,10 @@ if (form) {
     $("#cf-consent-ts").value = new Date().toISOString();
 
     error.textContent = "";
+    phone.removeAttribute("aria-invalid");
     form.reset();
     syncConsent();
-    showToast("Спасибо! Заявка принята — перезвоним в течение 15 минут (демо-режим: данные никуда не отправляются).");
+    showToast("Демонстрация формы завершена. Данные никуда не отправлены.");
   });
 }
 
@@ -233,128 +224,91 @@ if (cookieBanner) {
   });
 }
 
-/* ===== Видео в портфолио =====
-   Десктоп (мышь): ролик играет только пока на карточке курсор.
-   Тач-устройства: автозапуск, пока карточка на экране. */
+/* ===== Видео: обычное управление, один ролик за раз ===== */
 const portfolioVideos = $$(".project__video");
-if (portfolioVideos.length) {
-  const canHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+portfolioVideos.forEach((video) => {
+  video.addEventListener("play", () => {
+    portfolioVideos.forEach((other) => { if (other !== video) other.pause(); });
+  });
+});
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) portfolioVideos.forEach((video) => video.pause());
+});
 
-  const playSafe = (v) => {
-    const p = v.play();
-    if (p && typeof p.catch === "function") p.catch(() => {});
-    v.closest(".project")?.classList.add("is-playing");
-  };
-  const stop = (v) => {
-    v.pause();
-    v.closest(".project")?.classList.remove("is-playing");
-  };
-
-  if (canHover) {
-    portfolioVideos.forEach((v) => {
-      const card = v.closest(".project");
-      if (!card) return;
-      card.addEventListener("mouseenter", () => playSafe(v));
-      card.addEventListener("mouseleave", () => stop(v));
-      // клавиатурная навигация: фокус на карточке ведёт себя как наведение
-      card.addEventListener("focusin", () => playSafe(v));
-      card.addEventListener("focusout", () => stop(v));
+/* ===== Выбор направления работ. Без JavaScript остаются обычные якоря. ===== */
+const workFilters = $$("[data-work-filter]");
+const workGroups = $$("[data-work-group]");
+if (workFilters.length) {
+  const selectWorkGroup = (id) => {
+    if (id !== "all" && !workGroups.some((group) => group.dataset.workGroup === id)) return;
+    workGroups.forEach((group) => { group.hidden = id !== "all" && group.dataset.workGroup !== id; });
+    workFilters.forEach((link) => {
+      const active = link.dataset.workFilter === id;
+      link.classList.toggle("is-active", active);
+      if (active) link.setAttribute("aria-current", "true");
+      else link.removeAttribute("aria-current");
     });
-  }
-
-  if ("IntersectionObserver" in window) {
-    const vObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          const v = entry.target;
-          if (canHover) {
-            // мышь: тянем только заголовок файла, чтобы старт по наведению был
-            // быстрым, но трафик не расходовался на три ролика целиком
-            if (entry.isIntersecting && v.preload === "none") {
-              v.preload = "metadata";
-              v.load();
-            }
-            return;
-          }
-          if (reduceMotion) return; // уважаем системную настройку «меньше движения»
-          if (entry.isIntersecting) playSafe(v);
-          else stop(v);
-        });
-      },
-      { threshold: 0.35 }
-    );
-    portfolioVideos.forEach((v) => vObserver.observe(v));
-  }
-  // без IntersectionObserver тач-устройствам остаётся постер — секция не ломается
+    const count = workGroups.filter((group) => !group.hidden).reduce((total, group) => total + $$(".work-shot", group).length, 0);
+    $("#work-count").textContent = `${id === "all" ? "Все направления" : $("span", workFilters.find((link) => link.dataset.workFilter === id)).textContent} · ${count} фото`;
+  };
+  workFilters.forEach((link) => link.addEventListener("click", (event) => {
+    if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    selectWorkGroup(link.dataset.workFilter);
+    history.replaceState(null, "", link.getAttribute("href"));
+  }));
+  const syncWorkHash = () => {
+    if (location.hash.startsWith("#work-")) selectWorkGroup(location.hash.slice(6));
+    else if (location.hash === "#works" || !location.hash) selectWorkGroup("all");
+  };
+  window.addEventListener("hashchange", syncWorkHash);
+  syncWorkHash();
 }
 
-/* ===== Просмотр фотографий работ ===== */
+/* ===== Общий просмотр для обложки и галереи ===== */
 const workLightbox = $("#work-lightbox");
 if (workLightbox && typeof workLightbox.showModal === "function") {
-  const gallery = $(".section--works");
+  const photos = $$(".work-shot [data-work-photo]");
   const image = $("#work-lightbox-image");
   const caption = $("#work-lightbox-caption");
-  const close = $("#work-lightbox-close");
+  const counter = $("#work-lightbox-counter");
   let opener = null;
-
-  gallery.addEventListener("click", (event) => {
-    const link = event.target.closest?.(".work-shot a");
-    if (!link) return;
-
-    event.preventDefault();
-    const thumb = $("img", link);
-    opener = link;
+  let album = [];
+  let index = 0;
+  const showPhoto = (next) => {
+    index = (next + album.length) % album.length;
+    const link = album[index];
     image.src = link.href;
-    image.alt = thumb?.alt || "Фотография выполненной работы";
-    caption.textContent = $("figcaption", link.closest(".work-shot"))?.textContent || "";
+    image.alt = $("img", link).alt;
+    caption.textContent = link.dataset.caption;
+    counter.textContent = `${index + 1} / ${album.length}`;
+  };
+  document.addEventListener("click", (event) => {
+    const link = event.target.closest?.("[data-work-photo]");
+    if (!link || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+    album = photos.filter((photo) => photo.dataset.group === link.dataset.group);
+    if (!album.length) return;
+    event.preventDefault();
+    opener = link;
+    showPhoto(Math.max(0, album.findIndex((photo) => photo.href === link.href)));
     document.body.classList.add("is-locked");
     workLightbox.showModal();
   });
-
-  close.addEventListener("click", () => workLightbox.close());
+  $("#work-lightbox-prev").addEventListener("click", () => showPhoto(index - 1));
+  $("#work-lightbox-next").addEventListener("click", () => showPhoto(index + 1));
+  $("#work-lightbox-close").addEventListener("click", () => workLightbox.close());
+  workLightbox.addEventListener("keydown", (event) => {
+    if (event.key === "ArrowRight" || event.key === "ArrowLeft") {
+      event.preventDefault();
+      showPhoto(index + (event.key === "ArrowRight" ? 1 : -1));
+    }
+  });
   workLightbox.addEventListener("click", (event) => {
     if (event.target === workLightbox) workLightbox.close();
   });
   workLightbox.addEventListener("close", () => {
     document.body.classList.remove("is-locked");
     image.removeAttribute("src");
-    opener?.focus();
+    opener?.focus({ preventScroll: true });
   });
-}
-
-/* ===== Сборка комнаты при прокрутке (только главная) ===== */
-const assembly = $("#assembly");
-if (assembly) {
-  const frames = $$(".assembly__frame", assembly);
-  const caption = $("#assembly-caption");
-  const dotsWrap = $("#assembly-dots");
-
-  frames.forEach(() => dotsWrap.appendChild(document.createElement("span")));
-  const dots = $$("span", dotsWrap);
-
-  if (reduceMotion) {
-    assembly.classList.add("assembly--static");
-    caption.textContent = frames[frames.length - 1].alt;
-    dots.forEach((d, i) => d.classList.toggle("is-active", i === dots.length - 1));
-  } else {
-    const update = () => {
-      const track = assembly.offsetHeight - window.innerHeight;
-      if (track <= 0) return;
-      const progress = Math.min(1, Math.max(0, -assembly.getBoundingClientRect().top / track));
-      const pos = progress * (frames.length - 1);
-
-      // Кадр i проявляется поверх предыдущего на своём отрезке трека
-      frames.forEach((frame, i) => {
-        frame.style.opacity = i === 0 ? 1 : Math.min(1, Math.max(0, pos - (i - 1)));
-      });
-
-      const idx = Math.min(frames.length - 1, Math.round(pos));
-      if (caption.textContent !== frames[idx].alt) caption.textContent = frames[idx].alt;
-      dots.forEach((d, i) => d.classList.toggle("is-active", i === idx));
-    };
-
-    window.addEventListener("scroll", update, { passive: true });
-    window.addEventListener("resize", update);
-    update();
-  }
 }

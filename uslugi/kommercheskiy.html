@@ -6,19 +6,18 @@
   <title>Ремонт коммерческих помещений в Ростове-на-Дону — цена по проекту | ROSTOV REMONT</title>
   <meta name="robots" content="noindex">
   <meta name="description" content="Ремонт коммерческих помещений в Ростове-на-Дону: офисы, кафе, салоны, шоурумы. Сжатые сроки, работа по ночам, закрывающие документы для юрлиц.">
-  <meta name="theme-color" content="#f6f6f3">
+  <meta name="theme-color" content="#ffffff">
   <meta property="og:title" content="Ремонт коммерческих помещений в Ростове-на-Дону — цена по проекту | ROSTOV REMONT">
   <meta property="og:description" content="Ремонт коммерческих помещений в Ростове-на-Дону: офисы, кафе, салоны, шоурумы. Сжатые сроки, работа по ночам, закрывающие документы для юрлиц.">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="ru_RU">
   <link rel="canonical" href="https://trip-prog.github.io/rostov-remont/uslugi/kommercheskiy.html">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../css/style.css?v=13">
+  <link rel="preload" href="../fonts/tenor-sans-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../fonts/fonts.css?v=20">
+  <link rel="stylesheet" href="../css/style.css?v=20">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23c6952e'/><path d='M9 22V13l7-5 7 5v9' fill='none' stroke='%23fff' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/></svg>">
 </head>
-<body>
+<body data-page="uslugi-item">
 
 <a href="#main" class="skip-link">К основному содержимому</a>
 
@@ -28,6 +27,7 @@
       <svg class="logo__mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7" fill="var(--gold)"/><path d="M9 22V13l7-5 7 5v9" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
       <span class="logo__text">ROSTOV<br><b>REMONT</b></span>
     </a>
+    <span class="header__city">Ремонт квартир<br>в Ростове-на-Дону</span>
     <nav class="nav" aria-label="Основная навигация">
         <a href="index.html" class="nav__link is-active" aria-current="page">Услуги</a>
         <a href="../portfolio.html" class="nav__link">Портфолио</a>
@@ -36,8 +36,9 @@
         <a href="../kontakty.html" class="nav__link">Контакты</a>
     </nav>
     <div class="header__actions">
-      <a href="tel:+78633101090" class="header__phone">+7 (863) 310-10-90</a>
-      <button type="button" class="menu-btn" id="menu-open" aria-haspopup="dialog" aria-expanded="false" aria-controls="drawer">
+      <a href="tel:+78633101090" class="header__phone">+7 (863) 310-10-90<small>Ежедневно, 9:00–20:00</small></a>
+      <a href="#zayavka" class="header__cta">Обсудить ремонт</a>
+      <button type="button" class="menu-btn" id="menu-open" aria-label="Открыть меню" aria-haspopup="dialog" aria-expanded="false" aria-controls="drawer">
         <span class="menu-btn__bars" aria-hidden="true"><span></span><span></span><span></span></span>
         <span class="menu-btn__label">Меню</span>
       </button>
@@ -71,7 +72,7 @@
   <div class="drawer__foot">
     <a href="tel:+78633101090" class="drawer__phone">+7 (863) 310-10-90</a>
     <span class="drawer__hours">Ежедневно, 9:00–20:00</span>
-    <a href="../kontakty.html" class="btn btn--gold btn--full">Заказать звонок</a>
+    <a href="../kontakty.html" class="btn btn--gold btn--full">Обсудить ремонт</a>
   </div>
 </aside>
 
@@ -79,24 +80,21 @@
 
 <nav class="crumbs" aria-label="Хлебные крошки"><div class="container"><ol><li><a href="../index.html">Главная</a></li><li><a href="index.html">Услуги</a></li><li aria-current="page">Коммерческие помещения</li></ol></div></nav>
 
-<section class="page-hero">
+<section class="page-hero page-hero--plain">
   <div class="container page-hero__inner">
     <div class="page-hero__text">
       <h1 class="page-hero__title">Ремонт коммерческих помещений</h1>
       <p class="page-hero__lead">Офисы, кафе, салоны красоты и шоурумы. Работаем сменами и по ночам, чтобы вы открылись в срок и не теряли выручку.</p>
       <div class="page-hero__cta">
-          <a href="#zayavka" class="btn btn--gold">Рассчитать стоимость</a>
-          <a href="tel:+78633101090" class="btn btn--white">+7 (863) 310-10-90</a>
+          <a href="#zayavka" class="btn btn--gold">Обсудить задачу</a>
+          <a href="../portfolio.html" class="text-link">Посмотреть работы</a>
         </div>
       <ul class="page-hero__facts">
-          <li><b>24/7</b><span>возможен график</span></li>
-          <li><b>НДС</b><span>работаем с юрлицами</span></li>
-          <li><b>5 лет</b><span>гарантия на работы</span></li>
+          <li><b>по проекту</b><span>стоимость работ</span></li>
+          <li><b>от 3 недель</b><span>ориентировочный срок</span></li>
         </ul>
     </div>
-    <div class="page-hero__media">
-        <img src="https://images.unsplash.com/photo-1615529182904-14819c35db37?auto=format&fit=crop&w=1100&q=80" alt="Ремонт коммерческих помещений" width="1100" height="825" loading="eager">
-      </div>
+
   </div>
 </section>
 
@@ -105,7 +103,7 @@
   <div class="container">
     <div class="section__head">
       <h2 class="section__title">Что входит в услугу</h2>
-        <p class="section__note">Полный перечень фиксируется в смете до начала работ — дополнительных строк по ходу ремонта не появляется.</p>
+        <p class="section__note">Ниже — основные задачи. Точный состав согласуем после осмотра квартиры и запишем в смете.</p>
     </div>
     <ul class="includes">
       <li>
@@ -194,8 +192,8 @@
 <section class="section">
   <div class="container">
     <div class="section__head">
-      <h2 class="section__title">Пять понятных этапов</h2>
-        <p class="section__note">Каждый шаг зафиксирован в договоре. Вы всегда знаете, что происходит на объекте и сколько это стоит.</p>
+      <h2 class="section__title">Как будет проходить работа</h2>
+        <p class="section__note">Согласуем последовательность и сроки до начала ремонта. Объём каждого этапа зависит от вашей задачи.</p>
     </div>
     <ol class="steps__grid">
       <li class="step">
@@ -206,12 +204,12 @@
       <li class="step">
         <span class="step__num">02</span>
         <h3>Смета и договор</h3>
-        <p>Составляем прозрачную смету с фиксированной ценой и подписываем договор.</p>
+        <p>Согласуем перечень работ, стоимость, сроки и порядок оплаты.</p>
       </li>
       <li class="step">
         <span class="step__num">03</span>
         <h3>Черновые работы</h3>
-        <p>Демонтаж, инженерия, выравнивание. Всё скрытое — под гарантией.</p>
+        <p>Демонтаж, инженерия и выравнивание. Фотографируем коммуникации до отделки.</p>
       </li>
       <li class="step">
         <span class="step__num">04</span>
@@ -221,7 +219,7 @@
       <li class="step">
         <span class="step__num">05</span>
         <h3>Приёмка и гарантия</h3>
-        <p>Сдаём объект, убираем за собой и выдаём гарантию на 5 лет.</p>
+        <p>Проверяем готовую работу вместе с вами. Передаём документы и условия гарантии.</p>
       </li>
     </ol>
   </div>
@@ -291,8 +289,8 @@
   <div class="container">
     <div class="cta-card">
       <div class="cta-card__text">
-        <h2 class="section__title">Нужен коммерческие помещения?</h2>
-        <p class="section__note">Оставьте заявку — перезвоним в течение 15 минут, ответим на вопросы и предложим бесплатный выезд замерщика. Без навязчивых звонков.</p>
+        <h2 class="section__title">Обсудим вашу задачу?</h2>
+        <p class="section__note">Напишите пару слов о квартире: площадь, состояние и что нужно сделать. Если пока есть только идея — начнём с неё.</p>
         <ul class="cta-card__contacts">
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.4-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg><a href="tel:+78633101090">+7 (863) 310-10-90</a></li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg><a href="mailto:info@rostov-remont.ru">info@rostov-remont.ru</a></li>
@@ -307,7 +305,7 @@
         </label>
         <label class="field">
           <span>Телефон</span>
-          <input type="tel" name="phone" id="cf-phone" placeholder="+7 (___) ___-__-__" inputmode="tel" autocomplete="tel" required>
+          <input type="tel" name="phone" id="cf-phone" placeholder="+7 999 123-45-67" inputmode="tel" autocomplete="tel" aria-describedby="cf-phone-error" required>
           <small class="field__error" id="cf-phone-error" role="alert"></small>
         </label>
         <label class="field">
@@ -325,7 +323,7 @@
         <input type="hidden" name="consent_ts" id="cf-consent-ts">
         <input type="hidden" name="consent_docs_rev" value="27.07.2026">
         <button type="submit" class="btn btn--gold btn--full" id="cf-submit" aria-disabled="true">Заказать звонок</button>
-        <p class="cta-form__note">Перезвоним в течение 15 минут в рабочее время.</p>
+        <p class="cta-form__note">Демонстрационная форма. Данные не отправляются.</p>
       </form>
     </div>
   </div>
@@ -339,7 +337,7 @@
       <svg class="logo__mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7" fill="var(--gold)"/><path d="M9 22V13l7-5 7 5v9" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
       <span class="logo__text">ROSTOV<br><b>REMONT</b></span>
     </a>
-      <p>Ремонт квартир, новостроек и коммерческих помещений в Ростове-на-Дону под ключ с 2014 года.</p>
+      <p>Ремонт квартир, новостроек и коммерческих помещений в Ростове-на-Дону под ключ.</p>
       <div class="footer__contacts">
         <a href="tel:+78633101090" class="footer__phone">+7 (863) 310-10-90</a>
         <a href="mailto:info@rostov-remont.ru">info@rostov-remont.ru</a>
@@ -408,6 +406,6 @@
   </div>
 </div>
 
-<script src="../js/main.js?v=13" defer></script>
+<script src="../js/main.js?v=20" defer></script>
 </body>
 </html>

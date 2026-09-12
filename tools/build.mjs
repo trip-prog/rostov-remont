@@ -9,11 +9,11 @@ import { writeFile, mkdir } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
-import { site, services, categories, workGroups, reviews, serviceBySlug } from "./site.data.mjs";
+import { site, services, categories, workGroups, serviceBySlug } from "./site.data.mjs";
 import { page, breadcrumbs, icon } from "./layout.mjs";
 import {
   pageHero, serviceGrid, stepsBlock,
-  reviewsBlock, advantagesBlock, priceTable, faqBlock, ctaBlock,
+  advantagesBlock, priceTable, faqBlock, ctaBlock,
   sectionHead, relatedBlock, videoGrid, workGallery,
 } from "./blocks.mjs";
 
@@ -24,139 +24,80 @@ const written = [];
 async function emit(relPath, html) {
   const full = join(ROOT, relPath);
   await mkdir(dirname(full), { recursive: true });
-  await writeFile(full, html, "utf8");
+  await writeFile(full, html.replace(/[ \t]+$/gm, ""), "utf8");
   written.push(relPath);
 }
 
 /* ================= ГЛАВНАЯ ================= */
 function buildHome() {
-  const featured = ["kapitalnyy-remont", "kosmeticheskiy-remont", "dizayn-proekt", "novostroyka", "vannaya", "plitka"]
-    .map((s) => serviceBySlug[s]);
-
+  const featured = ["kapitalnyy-remont", "kosmeticheskiy-remont", "dizayn-proekt", "novostroyka", "vannaya", "plitka"].map((slug) => serviceBySlug[slug]);
+  const tile = workGroups.find((group) => group.id === "tile");
+  const electrical = workGroups.find((group) => group.id === "electrical");
   const body = `
-<!-- ===== HERO ===== -->
-<section class="hero">
-  <div class="container hero__inner">
-    <div class="hero__content">
-      <span class="pill">${icon("pin")}${site.city}</span>
-      <h1 class="hero__title">Ремонт квартир под ключ<br>в Ростове-на-Дону</h1>
-      <p class="hero__subtitle">Создаём комфортные интерьеры и берём все заботы по ремонту на себя.</p>
-      <div class="hero__cta">
-        <a href="#zayavka" class="btn btn--gold">Рассчитать стоимость</a>
-        <a href="portfolio.html" class="btn btn--white">Смотреть проекты</a>
+<section class="home-hero">
+  <div class="container home-hero__inner">
+    <div class="home-hero__text">
+      <h1>Ваш дом.<br>Наше&nbsp;дело.</h1>
+      <p>Ремонт квартир под ключ в Ростове-на-Дону. От первой сметы до последней розетки.</p>
+      <div class="home-hero__actions">
+        <a class="btn btn--gold" href="#zayavka">Обсудить ремонт</a>
+        <a class="text-link" href="portfolio.html">Посмотреть работы</a>
       </div>
+      <div class="home-hero__foot"><span>Квартиры и новостройки</span><span>Отдельные виды работ</span></div>
     </div>
-    <div class="hero__media">
-      <div class="hero__photo">
-        <img src="работы/Плиточные работы/photo_4_2026-09-03_11-58-03.jpg" alt="Готовая ванная комната с крупноформатной плиткой" loading="eager" width="1024" height="768">
-      </div>
-    </div>
+    <figure class="home-hero__visual">
+      <img src="${tile.photos[3].src}" alt="${tile.photos[3].alt}" width="1024" height="768" fetchpriority="high">
+      <figcaption><span>Плитка, камень и дерево</span><a href="portfolio.html#work-tile">Посмотреть отделку ${icon("arrow")}</a></figcaption>
+    </figure>
   </div>
+</section>
+<div class="container">${advantagesBlock()}</div>
 
+<section class="section">
   <div class="container">
-    ${advantagesBlock()}
-  </div>
-</section>
-
-<!-- ===== ASSEMBLY: комната собирается при скролле ===== -->
-<section class="assembly" id="assembly" aria-label="Как рождается ваш ремонт">
-  <div class="assembly__sticky">
-    <div class="assembly__frames">
-      <img class="assembly__frame" src="img/stage-0.png?v=2" alt="Коробка от застройщика" decoding="async" width="1024" height="572">
-      <img class="assembly__frame" src="img/stage-1.jpg" alt="Черновая отделка" decoding="async" width="1024" height="572">
-      <img class="assembly__frame" src="img/stage-2.jpg" alt="Стены и полы готовы" decoding="async" width="1024" height="572">
-      <img class="assembly__frame" src="img/stage-3.jpg" alt="Появляется мебель" decoding="async" width="1024" height="572">
-      <img class="assembly__frame" src="img/stage-4.jpg" alt="Свет и растения" decoding="async" width="1024" height="572">
-      <img class="assembly__frame" src="img/stage-5.jpg" alt="Финальные штрихи" decoding="async" width="1024" height="572">
-    </div>
-    <div class="assembly__scrim" aria-hidden="true"></div>
-    <div class="assembly__overlay">
-      <div class="container">
-        <h2 class="assembly__title">Как рождается ваш ремонт</h2>
-        <p class="assembly__caption" id="assembly-caption">Коробка от застройщика</p>
-        <div class="assembly__dots" id="assembly-dots" aria-hidden="true"></div>
-      </div>
+    ${sectionHead({ title: "Результат. И всё, что за ним.", note: "Готовая отделка и скрытая инженерия на наших объектах.", row: true, link: { href: "portfolio.html", label: "Все работы" } })}
+    <div class="work-preview">
+      <a href="portfolio.html#work-tile" class="work-preview__item">
+        <img src="${tile.photos[2].src}" alt="${tile.photos[2].alt}" loading="lazy" width="720" height="1280">
+        <span><b>Чистовая отделка</b><small>Плитка и санузлы</small>${icon("arrow")}</span>
+      </a>
+      <a href="portfolio.html#work-electrical" class="work-preview__item">
+        <img src="${electrical.photos[1].src}" alt="${electrical.photos[1].alt}" loading="lazy" width="960" height="1280">
+        <span><b>То, что внутри</b><small>Электрика и инженерия</small>${icon("arrow")}</span>
+      </a>
     </div>
   </div>
 </section>
 
-<!-- ===== О КОМПАНИИ ===== -->
-<section class="section about">
-  <div class="container about__inner">
-    <div class="about__text">
-      <h2 class="section__title">Строительная бригада, которую<br>не стыдно рекомендовать соседям</h2>
-      <p class="section__note">С ${site.since} года ремонтируем квартиры, новостройки и коммерческие помещения в Ростове-на-Дону и области. Работаем официально по договору, отвечаем за результат и остаёмся на связи даже после сдачи объекта.</p>
-      <ul class="about__list">
-        <li>${icon("check")}Свои прорабы и мастера в штате, без случайных подрядчиков</li>
-        <li>${icon("check")}Закупаем материалы по оптовым ценам и показываем все чеки</li>
-        <li>${icon("check")}Фотоотчёт по работам каждую неделю в общем чате</li>
-      </ul>
-      <a href="o-kompanii.html" class="link-arrow">Подробнее о компании${icon("arrow")}</a>
-    </div>
-    <ul class="stats">
-      <li><b>10+</b><span>лет на&nbsp;рынке</span></li>
-      <li><b>850+</b><span>выполненных проектов</span></li>
-      <li><b>95%</b><span>клиентов рекомендуют нас</span></li>
-      <li><b>5 лет</b><span>гарантии на&nbsp;работы</span></li>
-    </ul>
-  </div>
-</section>
-
-<!-- ===== УСЛУГИ ===== -->
 <section class="section section--alt">
-  <div class="container">
-    ${sectionHead({
-      title: "Виды ремонта под любую задачу",
-      note: "Подберём формат работ под ваш бюджет и сроки — от косметического обновления до ремонта по авторскому дизайн-проекту.",
-      link: { href: "uslugi/index.html", label: "Все услуги" },
-      row: true,
-    })}
+  <div class="container service-overview">
+    <div class="service-overview__intro">
+      <h2 class="section__title">Целая квартира.<br>Или одна задача.</h2>
+      <p class="section__note">Выберите подходящий формат. Состав работ, сроки и цены собрали на отдельных страницах.</p>
+      <a class="text-link" href="uslugi/index.html">Все ${services.length} услуг</a>
+    </div>
     ${serviceGrid(featured)}
   </div>
 </section>
 
-<!-- ===== ПОРТФОЛИО ===== -->
 <section class="section">
   <div class="container">
-    ${sectionHead({
-      title: "Работы без ретуши",
-      note: "Показываем не только красивый финал, но и то, что останется за стенами после ремонта.",
-      link: { href: "portfolio.html", label: "Смотреть 27 фотографий" },
-      row: true,
-    })}
-    ${videoGrid()}
-  </div>
-</section>
-
-<!-- ===== ЭТАПЫ ===== -->
-<section class="section section--alt">
-  <div class="container">
-    ${sectionHead({
-      title: "Пять понятных этапов",
-      note: "Каждый шаг зафиксирован в договоре. Вы всегда знаете, что происходит на объекте и сколько это стоит.",
-    })}
+    ${sectionHead({ title: "Сначала договоримся.<br>Потом начнём.", note: "Пять этапов от знакомства с объектом до приёмки готового ремонта." })}
     ${stepsBlock()}
   </div>
 </section>
 
-<!-- ===== ОТЗЫВЫ ===== -->
-<section class="section">
-  <div class="container">
-    ${sectionHead({ title: "Что говорят наши клиенты" })}
-    ${reviewsBlock(reviews.slice(0, 3))}
+<section class="section section--about">
+  <div class="container about__inner">
+    <h2 class="section__title">Хороший ремонт —<br>это ещё и спокойствие.</h2>
+    <div class="about__text">
+      <p class="section__note">Состав работ, стоимость и сроки закрепляем в договоре. Показываем чеки на материалы и присылаем фотоотчёты с объекта.</p>
+      <a href="o-kompanii.html" class="text-link">Как мы работаем</a>
+    </div>
   </div>
 </section>
-
-${ctaBlock()}`;
-
-  return page({
-    title: site.baseTitle,
-    description: "Ремонт квартир в Ростове-на-Дону под ключ. Фиксированная смета без скрытых платежей, соблюдение сроков по договору, оплата по этапам и гарантия 5 лет на все работы.",
-    base: "",
-    active: "index",
-    canonical: SITE_URL,
-    body,
-  });
+${ctaBlock({ title: "Начнём с вашей квартиры?", note: "Расскажите, что хотите изменить. Обсудим объём работ, сроки и следующий шаг." })}`;
+  return page({ title: site.baseTitle, description: "Ремонт квартир в Ростове-на-Дону: фотографии работ, услуги и цены. ROSTOV REMONT — от черновых работ до чистовой отделки.", active: "index", canonical: SITE_URL, body });
 }
 
 /* ================= КАТАЛОГ УСЛУГ ================= */
@@ -184,8 +125,7 @@ ${pageHero({
   lead: `${services.length} направлений работ: от полного ремонта под ключ до отдельной задачи вроде штукатурки или укладки плитки. Возьмёмся и за квартиру целиком, и за одну комнату.`,
   facts: [
     { b: `${services.length}`, s: "видов работ" },
-    { b: "850+", s: "сданных объектов" },
-    { b: "5 лет", s: "гарантия" },
+    { b: "Под ключ", s: "или отдельная задача" },
   ],
   base: "../",
 })}
@@ -225,9 +165,9 @@ ${breadcrumbs([
 ${pageHero({
   title: s.title,
   lead: s.lead,
-  facts: s.facts,
-  photo: s.photo,
-  alt: s.title,
+  facts: [{ b: s.price, s: "стоимость работ" }, { b: s.term, s: "ориентировочный срок" }],
+  photo: s.photo?.src,
+  alt: s.photo?.alt,
   base: "../",
 })}
 
@@ -236,7 +176,7 @@ ${pageHero({
   <div class="container">
     ${sectionHead({
       title: "Что входит в услугу",
-      note: "Полный перечень фиксируется в смете до начала работ — дополнительных строк по ходу ремонта не появляется.",
+      note: "Ниже — основные задачи. Точный состав согласуем после осмотра квартиры и запишем в смете.",
     })}
     <ul class="includes">
       ${includes}
@@ -262,8 +202,8 @@ ${pageHero({
 <section class="section">
   <div class="container">
     ${sectionHead({
-      title: "Пять понятных этапов",
-      note: "Каждый шаг зафиксирован в договоре. Вы всегда знаете, что происходит на объекте и сколько это стоит.",
+      title: "Как будет проходить работа",
+      note: "Согласуем последовательность и сроки до начала ремонта. Объём каждого этапа зависит от вашей задачи.",
     })}
     ${stepsBlock()}
   </div>
@@ -279,7 +219,7 @@ ${pageHero({
 
 ${relatedBlock(s.related, "")}
 
-${ctaBlock({ base: "../", title: `Нужен ${s.menu.toLowerCase()}?`, subject: s.menu })}`;
+${ctaBlock({ base: "../", title: "Обсудим вашу задачу?", subject: s.menu })}`;
 
   return page({
     title: `${s.title} в Ростове-на-Дону — цена ${s.price} | ROSTOV REMONT`,
@@ -294,51 +234,50 @@ ${ctaBlock({ base: "../", title: `Нужен ${s.menu.toLowerCase()}?`, subject:
 
 /* ================= ПОРТФОЛИО ================= */
 function buildPortfolio() {
+  const groups = ["tile", "electrical", "plumbing", "walls", "plaster"].map((id) => workGroups.find((group) => group.id === id));
+  const featured = groups[0].photos[3];
+  const detail = groups[0].photos[2];
   const body = `
 ${breadcrumbs([{ href: "index.html", label: "Главная" }, { label: "Портфолио" }])}
-
-${pageHero({
-  title: "Наши работы",
-  lead: "Чистовая отделка и инженерия до того, как их закроют стены. Все фотографии сделаны на наших объектах — без фотостоков и ретуши.",
-  facts: [
-    { b: "27", s: "реальных фотографий" },
-    { b: "5", s: "видов работ" },
-    { b: "Ростов", s: "наши объекты" },
-  ],
-})}
-
-<section class="section section--works">
+<section class="portfolio-intro">
   <div class="container">
-    ${workGallery(workGroups)}
+    <div class="portfolio-intro__heading">
+      <h1>Хороший ремонт<br>виден в деталях.</h1>
+      <div><p>От готовой ванной до разводки за стенами. Показываем наши работы вблизи — такими, какие они есть.</p><a class="text-link" href="#works">Смотреть все фотографии</a></div>
+    </div>
+    <div class="portfolio-feature">
+      <figure class="portfolio-feature__main">
+        <a href="${featured.src}" data-work-photo data-group="tile" data-caption="${featured.caption}" aria-haspopup="dialog" aria-controls="work-lightbox" aria-label="Открыть фотографию: ${featured.caption}">
+          <img src="${featured.src}" alt="${featured.alt}" width="1024" height="768" fetchpriority="high">
+          <span class="portfolio-feature__zoom" aria-hidden="true">${icon("expand")}</span>
+        </a>
+        <figcaption><span>Плиточная отделка</span><span>Крупный формат, точные примыкания</span></figcaption>
+      </figure>
+      <figure class="portfolio-feature__detail">
+        <a href="${detail.src}" data-work-photo data-group="tile" data-caption="${detail.caption}" aria-haspopup="dialog" aria-controls="work-lightbox" aria-label="Открыть фотографию: ${detail.caption}">
+          <img src="${detail.src}" alt="${detail.alt}" width="720" height="1280">
+          <span class="portfolio-feature__zoom" aria-hidden="true">${icon("expand")}</span>
+        </a>
+        <figcaption>Камень, дерево и тёплый свет</figcaption>
+      </figure>
+    </div>
+    <div class="portfolio-intro__foot"><p>27 фотографий с объектов</p><p>Чистовая отделка и черновые работы</p><a class="text-link" href="#zayavka">Обсудить похожий ремонт</a></div>
   </div>
 </section>
-
-<section class="section section--alt">
+<section class="section section--works" id="works">
   <div class="container">
-    ${sectionHead({
-      title: "Объекты в движении",
-      note: "Короткие обходы готовых квартир. На компьютере ролик запускается при наведении, на телефоне — сам.",
-    })}
+    <h2 class="collection-title">Работы в подробностях</h2>
+    ${workGallery(groups)}
+  </div>
+</section>
+<section class="section section--alt">
+  <div class="container video-section">
+    ${sectionHead({ title: "Загляните внутрь.", note: "Три коротких видео с объектов. Запустите ролик, чтобы рассмотреть пространство." })}
     ${videoGrid()}
   </div>
 </section>
-
-<section class="section">
-  <div class="container">
-    ${sectionHead({ title: "Что говорят наши клиенты" })}
-    ${reviewsBlock(reviews)}
-  </div>
-</section>
-
-${ctaBlock()}`;
-
-  return page({
-    title: "Портфолио — выполненные ремонты квартир в Ростове-на-Дону | ROSTOV REMONT",
-    description: "Портфолио ROSTOV REMONT: выполненные ремонты квартир и коммерческих помещений в Ростове-на-Дону с указанием метража, бюджета и сроков.",
-    active: "portfolio",
-    canonical: SITE_URL + "portfolio.html",
-    body,
-  });
+${ctaBlock({ title: "Каким будет ваш ремонт?", note: "Расскажите о квартире и своих планах. Поможем разобраться с объёмом работ и стоимостью." })}`;
+  return page({ title: "Портфолио — выполненные ремонты квартир в Ростове-на-Дону | ROSTOV REMONT", description: "27 фотографий работ ROSTOV REMONT: плитка, электрика, сантехника, перегородки и штукатурка. Реальные детали ремонта и видео с объектов.", active: "portfolio", canonical: SITE_URL + "portfolio.html", body });
 }
 
 /* ================= ЦЕНЫ ================= */
@@ -368,11 +307,10 @@ ${breadcrumbs([{ href: "index.html", label: "Главная" }, { label: "Цен
 
 ${pageHero({
   title: "Прайс-лист на ремонт",
-  lead: "Цены за работу без стоимости материалов, актуальны на 2026 год. Итоговая сумма фиксируется в смете после бесплатного замера и дальше не меняется.",
+  lead: "Здесь — начальная стоимость работ без материалов. Площадь, состояние квартиры и выбранная отделка влияют на итог. Точный расчёт составим после осмотра.",
   facts: [
-    { b: "Бесплатно", s: "выезд замерщика" },
-    { b: "Фикс", s: "цена в договоре" },
-    { b: "По этапам", s: "оплата без предоплаты" },
+    { b: "Работы", s: "цены без материалов" },
+    { b: "Смета", s: "под вашу квартиру" },
   ],
 })}
 
@@ -380,10 +318,10 @@ ${tables}
 
 <section class="section section--alt">
   <div class="container container--narrow">
-    ${sectionHead({ title: "О деньгах — честно" })}
+    ${sectionHead({ title: "Что влияет на стоимость" })}
     ${faqBlock([
       { q: "Смета может вырасти в процессе?", a: "Только если меняется объём работ — например, вы решили перенести стену, которой не было в проекте. Такие изменения оформляются допсоглашением с новой ценой до начала работ. Сама по себе, «из-за подорожания», смета не растёт." },
-      { q: "Материалы вы закупаете или я?", a: "Как удобнее. Обычно закупаем мы: есть оптовые цены у поставщиков, разница часто перекрывает нашу наценку. Все чеки передаём вам. Если хотите покупать сами — дадим точную спецификацию с количеством." },
+      { q: "Материалы вы закупаете или я?", a: "Как удобнее. Обычно закупаем мы: есть оптовые цены у поставщиков, условия закупки согласуем заранее. Все чеки передаём вам. Если хотите покупать сами — дадим точную спецификацию с количеством." },
       { q: "Когда и сколько платить?", a: "Предоплаты за работы нет. Платите по факту закрытия каждого этапа: приняли черновые — оплатили черновые. Деньги на материалы вносятся отдельно перед закупкой партии." },
       { q: "Что входит в гарантию 5 лет?", a: "Все работы, которые мы выполнили: отделка, стяжка, плитка, разводка электрики и воды. Не покрываются повреждения от эксплуатации, аварий у соседей и работы, которые после нас переделывал кто-то другой." },
     ])}
@@ -394,7 +332,7 @@ ${ctaBlock({ title: "Посчитаем точно по вашему объек�
 
   return page({
     title: "Цены на ремонт квартир в Ростове-на-Дону — прайс-лист 2026 | ROSTOV REMONT",
-    description: "Прайс-лист на ремонт квартир в Ростове-на-Дону: капитальный, косметический, под дизайн-проект, отдельные виды работ. Калькулятор предварительного расчёта.",
+    description: "Начальная стоимость и ориентировочные сроки ремонта квартир в Ростове-на-Дону. Подробные расценки на услуги, условия расчёта и ответы на вопросы.",
     active: "tseny",
     canonical: SITE_URL + "tseny.html",
     body,
@@ -403,175 +341,59 @@ ${ctaBlock({ title: "Посчитаем точно по вашему объек�
 
 /* ================= О КОМПАНИИ ================= */
 function buildAbout() {
+  const tile = workGroups.find((group) => group.id === "tile");
+  const plumbing = workGroups.find((group) => group.id === "plumbing");
   const principles = [
-    { icon: "doc", t: "Фиксированная смета", d: "Цена в договоре не меняется. Любые дополнения — только через допсоглашение, которое вы подписываете до работ." },
-    { icon: "clock", t: "Срок с ответственностью", d: "Дата сдачи прописана в договоре. За просрочку по нашей вине предусмотрена неустойка." },
-    { icon: "card", t: "Оплата по этапам", d: "Предоплаты за работы нет. Платите за закрытый этап, который приняли и проверили." },
-    { icon: "users", t: "Свои мастера", d: "Прорабы и бригады в штате. Мы не передаём объект случайным субподрядчикам с улицы." },
-    { icon: "shield", t: "Гарантия 5 лет", d: "На все выполненные работы, включая скрытые. Приезжаем по гарантийным обращениям бесплатно." },
-    { icon: "wallet", t: "Прозрачные материалы", d: "Закупаем по оптовым ценам и отдаём все чеки. Наценку не прячем в стоимости плитки." },
-  ]
-    .map(
-      (p) => `<li class="principle">
-        <span class="principle__icon">${icon(p.icon)}</span>
-        <h3>${p.t}</h3>
-        <p>${p.d}</p>
-      </li>`
-    )
-    .join("\n      ");
-
-  const timeline = [
-    { y: "2014", t: "Первая бригада", d: "Начали с косметических ремонтов в Западном микрорайоне вчетвером." },
-    { y: "2017", t: "Свой прораб на каждом объекте", d: "Перешли от «бригады по вызову» к системе с ответственным за объект." },
-    { y: "2020", t: "Работа с дизайнерами", d: "Освоили реализацию авторских проектов и сложные конструкции." },
-    { y: "2023", t: "Коммерческие объекты", d: "Добавили офисы, кафе и салоны, научились работать ночными сменами." },
-    { y: "2026", t: "850+ объектов", d: "В штате 34 мастера, 6 прорабов и собственный отдел закупок." },
-  ]
-    .map(
-      (t) => `<li class="timeline__item">
-        <span class="timeline__year">${t.y}</span>
-        <div class="timeline__body"><b>${t.t}</b><p>${t.d}</p></div>
-      </li>`
-    )
-    .join("\n      ");
-
+    { t: "Сначала разбираемся в задаче", d: "Обсуждаем планировку, привычки и бюджет. Например, где будет рабочий стол, сколько розеток нужно на кухне и что делать со старой отделкой." },
+    { t: "Записываем договорённости", d: "Состав работ, материалы, стоимость и сроки — в смете и договоре. Если планы меняются, сначала согласуем новую задачу и её цену." },
+    { t: "Показываем то, что будет скрыто", d: "Фотографируем проводку и трубы до отделки. Так понятно, что сделано внутри стен и где проходят коммуникации." },
+    { t: "Принимаем работу вместе", d: "Проходим по помещениям, проверяем отделку, свет и сантехнику. Замечания записываем, чтобы ничего не потерялось в разговоре." },
+  ];
   const body = `
 ${breadcrumbs([{ href: "index.html", label: "Главная" }, { label: "О компании" }])}
-
 ${pageHero({
-  title: "Бригада, которую<br>рекомендуют соседям",
-  lead: `С ${site.since} года ремонтируем квартиры, новостройки и коммерческие помещения в Ростове-на-Дону и области. Работаем официально, отвечаем за результат и остаёмся на связи после сдачи объекта.`,
-  facts: [
-    { b: "10+", s: "лет на рынке" },
-    { b: "34", s: "мастера в штате" },
-    { b: "850+", s: "сданных объектов" },
-  ],
-  photo: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1100&q=80",
-  alt: "Интерьер квартиры, сданной после ремонта",
+  title: "Ремонт — это<br>совместная работа.",
+  lead: "Кому-то нужно обновить одну комнату, кому-то — обустроить квартиру с нуля. Разбираем задачу вместе: что оставить, что переделать и с чего начать.",
+  photo: tile.photos[0].src,
+  alt: tile.photos[0].alt,
 })}
-
-<section class="section">
-  <div class="container">
-    ${sectionHead({
-      title: "Шесть правил, по которым мы работаем",
-      note: "Это не лозунги для сайта, а условия, которые записаны в договоре и которые вы можете с нас спросить.",
-    })}
-    <ul class="principles">
-      ${principles}
-    </ul>
-  </div>
-</section>
-
 <section class="section section--alt">
-  <div class="container container--narrow">
-    ${sectionHead({ title: "Как мы к этому пришли" })}
-    <ol class="timeline">
-      ${timeline}
-    </ol>
+  <div class="container approach">
+    <div><h2 class="section__title">Чтобы понимать<br>друг друга.</h2><p class="section__note">На ремонте достаточно решений. Договорённости должны помогать их принимать.</p></div>
+    <ul class="principles">${principles.map((p) => `<li class="principle"><h3>${p.t}</h3><p>${p.d}</p></li>`).join("")}</ul>
   </div>
 </section>
-
 <section class="section">
-  <div class="container">
-    ${sectionHead({
-      title: "Пять понятных этапов",
-      note: "Каждый шаг зафиксирован в договоре. Вы всегда знаете, что происходит на объекте и сколько это стоит.",
-    })}
-    ${stepsBlock()}
+  <div class="container about-detail">
+    <figure><img src="${plumbing.photos[1].src}" alt="${plumbing.photos[1].alt}" width="960" height="1280" loading="lazy"><figcaption>Коллекторный узел до закрытия коммуникаций</figcaption></figure>
+    <div><h2 class="section__title">Красивой должна быть<br>и работа внутри.</h2><p class="section__note">После ремонта трубы и провода почти не видны. В портфолио показываем их отдельно от готовых интерьеров — чтобы можно было рассмотреть монтаж вблизи.</p><a href="portfolio.html#work-plumbing" class="text-link">Рассмотреть инженерные работы</a></div>
   </div>
 </section>
-
-<section class="section section--alt">
-  <div class="container">
-    ${sectionHead({ title: "Что говорят наши клиенты" })}
-    ${reviewsBlock(reviews)}
-  </div>
-</section>
-
-${ctaBlock()}`;
-
+${ctaBlock({ title: "Начнём со знакомства", note: "План квартиры, несколько фотографий или сохранённые примеры интерьеров помогут объяснить идею. Если их пока нет — достаточно описать задачу." })}`;
   return page({
-    title: "О компании ROSTOV REMONT — ремонтная бригада в Ростове-на-Дону",
-    description: "ROSTOV REMONT: ремонт квартир в Ростове-на-Дону с 2014 года. 34 мастера в штате, 850+ сданных объектов, фиксированная смета и гарантия 5 лет.",
-    active: "o-kompanii",
-    canonical: SITE_URL + "o-kompanii.html",
-    body,
+    title: "О компании — как работает ROSTOV REMONT",
+    description: "Как мы обсуждаем ремонт, согласуем смету, показываем скрытые работы и принимаем результат. Фотографии работ ROSTOV REMONT в Ростове-на-Дону.",
+    active: "o-kompanii", canonical: SITE_URL + "o-kompanii.html", body,
   });
 }
 
 /* ================= КОНТАКТЫ ================= */
 function buildContacts() {
-  const cards = [
-    { icon: "phone", t: "Телефон", v: `<a href="${site.phoneHref}">${site.phone}</a>`, d: "Отвечаем с 9:00 до 20:00 без выходных" },
-    { icon: "mail", t: "Почта", v: `<a href="mailto:${site.email}">${site.email}</a>`, d: "Для смет, договоров и документов" },
-    { icon: "pin", t: "Офис", v: site.address, d: "Приезжайте на встречу — покажем образцы материалов" },
-    { icon: "clock", t: "Режим работы", v: site.hours, d: "Замер возможен и в выходной по договорённости" },
-  ]
-    .map(
-      (c) => `<li class="contact-card">
-        <span class="contact-card__icon">${icon(c.icon)}</span>
-        <h3>${c.t}</h3>
-        <p class="contact-card__value">${c.v}</p>
-        <p class="contact-card__note">${c.d}</p>
-      </li>`
-    )
-    .join("\n      ");
-
   const body = `
 ${breadcrumbs([{ href: "index.html", label: "Главная" }, { label: "Контакты" }])}
-
-${pageHero({
-  title: "Свяжитесь с нами",
-  lead: "Позвоните или оставьте заявку — перезвоним в течение 15 минут в рабочее время. Выезд замерщика по Ростову-на-Дону бесплатный и ни к чему не обязывает.",
-  cta: false,
-})}
-
-<section class="section">
+${pageHero({ title: "Давайте обсудим<br>вашу квартиру.", lead: "Можно начать с короткого звонка или письма. Расскажите, что хотите сделать и когда планируете ремонт.", cta: false })}
+<section class="section section--contact-details">
   <div class="container">
     <ul class="contact-grid">
-      ${cards}
+      <li class="contact-card"><h2>Позвонить</h2><p class="contact-card__value"><a href="${site.phoneHref}">${site.phone}</a></p><p class="contact-card__note">${site.hours}</p></li>
+      <li class="contact-card"><h2>Написать</h2><p class="contact-card__value"><a href="mailto:${site.email}">${site.email}</a></p><p class="contact-card__note">Можно приложить план и фотографии квартиры</p></li>
+      <li class="contact-card"><h2>Встретиться</h2><p class="contact-card__value">${site.address}</p><p class="contact-card__note">Дату и время встречи согласуйте заранее</p></li>
     </ul>
+    <p class="contact-demo">Это демонстрационный сайт: контактные данные приведены для примера.</p>
   </div>
 </section>
-
-<section class="section section--alt">
-  <div class="container">
-    ${sectionHead({
-      title: "Где нас найти",
-      note: "Офис на пр. Стачки, 20 — вход со стороны двора, второй этаж. Парковка вдоль здания.",
-    })}
-    <div class="map-placeholder">
-      ${icon("pin", "map-placeholder__pin")}
-      <b>${site.address}</b>
-      <span>В демонстрационной версии карта не подключена</span>
-    </div>
-  </div>
-</section>
-
-<section class="section">
-  <div class="container container--narrow">
-    ${sectionHead({ title: "Работаем официально" })}
-    <dl class="requisites">
-      <div><dt>Наименование</dt><dd>ООО «Ростов Ремонт»</dd></div>
-      <div><dt>ИНН / КПП</dt><dd>6100000000 / 610001001</dd></div>
-      <div><dt>ОГРН</dt><dd>1146100000000</dd></div>
-      <div><dt>Юридический адрес</dt><dd>${site.address}</dd></div>
-      <div><dt>Документы</dt><dd>Договор подряда, смета, акты КС-2 и КС-3</dd></div>
-      <div><dt>Оплата</dt><dd>Наличные, карта, безналичный расчёт для юрлиц</dd></div>
-    </dl>
-    <p class="price-note">${icon("doc")} Реквизиты в демонстрационной версии условные.</p>
-  </div>
-</section>
-
-${ctaBlock({ title: "Оставьте заявку" })}`;
-
-  return page({
-    title: "Контакты — ROSTOV REMONT, ремонт квартир в Ростове-на-Дону",
-    description: `Контакты ROSTOV REMONT: ${site.phone}, ${site.email}, ${site.address}. Бесплатный выезд замерщика по Ростову-на-Дону.`,
-    active: "kontakty",
-    canonical: SITE_URL + "kontakty.html",
-    body,
-  });
+${ctaBlock({ title: "С чего начнём?", note: "Для первого разговора хватит трёх вещей: площадь квартиры, её состояние и ваши пожелания. Точную стоимость можно определить после осмотра и согласования работ." })}`;
+  return page({ title: "Контакты — ROSTOV REMONT, Ростов-на-Дону", description: "Телефон, почта и форма обращения ROSTOV REMONT. Обсудите ремонт квартиры в Ростове-на-Дону.", active: "kontakty", canonical: SITE_URL + "kontakty.html", body });
 }
 
 /* ================= ПРОВЕРКИ ================= */

@@ -3,7 +3,7 @@
  * Каждая функция возвращает готовый HTML-фрагмент.
  */
 
-import { site, services, steps, reviews, advantages, videoProjects, legalRevision } from "./site.data.mjs";
+import { site, services, steps, advantages, videoProjects, legalRevision } from "./site.data.mjs";
 import { icon } from "./layout.mjs";
 
 /* ===== Шапка внутренней страницы ===== */
@@ -16,14 +16,15 @@ export function pageHero({ title, lead, facts = [], photo = "", alt = "", cta = 
 
   const ctaHtml = cta
     ? `<div class="page-hero__cta">
-          <a href="#zayavka" class="btn btn--gold">Рассчитать стоимость</a>
-          <a href="${site.phoneHref}" class="btn btn--white">${site.phone}</a>
+          <a href="#zayavka" class="btn btn--gold">Обсудить задачу</a>
+          <a href="${base}portfolio.html" class="text-link">Посмотреть работы</a>
         </div>`
     : "";
 
   const media = photo
     ? `<div class="page-hero__media">
-        <img src="${photo}" alt="${alt}" width="1100" height="825" loading="eager">
+        <img src="${photo.startsWith('http') ? photo : base + photo}" alt="${alt}" width="1100" height="825" fetchpriority="high">
+        ${photo.startsWith("http") ? '<span class="page-hero__image-note">Иллюстрация интерьера</span>' : ''}
       </div>`
     : "";
 
@@ -47,10 +48,10 @@ export function serviceGrid(list, dir = "uslugi/") {
   const cards = list
     .map(
       (s) => `<article class="service-card">
-        <div class="service-card__icon">${icon(s.icon)}</div>
         <h3><a href="${dir}${s.slug}.html" class="stretch">${s.menu}</a></h3>
-        <p>${s.lead}</p>
+        <p>${s.term}</p>
         <span class="service-card__price">${s.price}</span>
+        ${icon("arrow", "service-card__arrow")}
       </article>`
     )
     .join("\n      ");
@@ -65,15 +66,11 @@ export function videoGrid(base = "") {
     .map(
       (p) => `<article class="project project--video">
         <div class="project__media">
-          <video class="project__video" muted loop playsinline preload="none" poster="${base}${p.poster}" aria-label="${p.alt}">
+          <video class="project__video" controls muted playsinline preload="none" poster="${base}${p.poster}" aria-label="${p.alt}">
             <source src="${base}${p.video}" type="video/mp4">
           </video>
-          <span class="project__play" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg>
-          </span>
         </div>
         <div class="project__body">
-          <span class="project__tag">${p.tag}</span>
           <h3>${p.title}</h3>
           <p class="project__meta">${p.meta}</p>
         </div>
@@ -87,24 +84,26 @@ export function videoGrid(base = "") {
 
 /* ===== Фотогалерея реальных работ ===== */
 export function workGallery(groups) {
+  const count = groups.reduce((total, group) => total + group.photos.length, 0);
   const nav = groups
-    .map((group) => `<a href="#work-${group.id}" class="work-nav__link"><span>${group.short}</span><small>${group.photos.length}</small></a>`)
+    .map((group) => `<a href="#work-${group.id}" data-work-filter="${group.id}" class="work-nav__link"><span>${group.short}</span><small>${group.photos.length}</small></a>`)
     .join("\n      ");
 
   const sections = groups
     .map((group) => {
-      const photos = group.photos
+      const photos = (group.id === "tile" ? [group.photos[3], ...group.photos.slice(0, 3)] : group.photos)
         .map((photo) => `<figure class="work-shot">
-          <a href="${photo.src}" aria-haspopup="dialog" aria-controls="work-lightbox" aria-label="Открыть фотографию: ${photo.caption}">
+          <a href="${photo.src}" data-work-photo data-group="${group.id}" data-caption="${photo.caption}" aria-haspopup="dialog" aria-controls="work-lightbox" aria-label="Открыть фотографию: ${photo.caption}">
             <img src="${photo.src}" alt="${photo.alt}" loading="lazy" decoding="async">
+            <span class="work-shot__open" aria-hidden="true">${icon("expand")}</span>
           </a>
           <figcaption>${photo.caption}</figcaption>
         </figure>`)
         .join("\n        ");
 
-      return `<section class="work-group" id="work-${group.id}">
+      return `<section class="work-group" id="work-${group.id}" data-work-group="${group.id}" aria-labelledby="title-${group.id}">
       <div class="work-group__head">
-        <h2>${group.title}</h2>
+        <h2 id="title-${group.id}">${group.title}</h2>
         <p>${group.note}</p>
         <span>${group.photos.length} фото</span>
       </div>
@@ -116,8 +115,10 @@ export function workGallery(groups) {
     .join("\n\n    ");
 
   return `<nav class="work-nav" aria-label="Разделы портфолио">
+      <a href="#works" data-work-filter="all" class="work-nav__link is-active" aria-current="true">Все работы<small>${count}</small></a>
       ${nav}
     </nav>
+    <p class="work-count" id="work-count" role="status" aria-live="polite">Все направления · ${count} фото</p>
 
     ${sections}
 
@@ -128,6 +129,11 @@ export function workGallery(groups) {
       <div class="lightbox__content">
         <img class="lightbox__image" id="work-lightbox-image" alt="">
         <p class="lightbox__caption" id="work-lightbox-caption"></p>
+      </div>
+      <div class="lightbox__nav">
+        <button type="button" id="work-lightbox-prev" aria-label="Предыдущая фотография">${icon("arrow")}</button>
+        <span id="work-lightbox-counter" aria-live="polite"></span>
+        <button type="button" id="work-lightbox-next" aria-label="Следующая фотография">${icon("arrow")}</button>
       </div>
     </dialog>`;
 }
@@ -146,22 +152,6 @@ export function stepsBlock() {
   return `<ol class="steps__grid">
       ${items}
     </ol>`;
-}
-
-/* ===== Отзывы ===== */
-export function reviewsBlock(list = reviews.slice(0, 3)) {
-  const items = list
-    .map(
-      (r) => `<figure class="review">
-        <div class="review__stars" aria-label="Оценка 5 из 5">★★★★★</div>
-        <blockquote>${r.text}</blockquote>
-        <figcaption><b>${r.name}</b><span>${r.meta}</span></figcaption>
-      </figure>`
-    )
-    .join("\n      ");
-  return `<div class="reviews__grid">
-      ${items}
-    </div>`;
 }
 
 /* ===== Преимущества ===== */
@@ -222,7 +212,7 @@ export function faqBlock(items) {
 }
 
 /* ===== Форма заявки ===== */
-export function ctaBlock({ base = "", title = "Расскажите о вашем объекте", note = "Оставьте заявку — перезвоним в течение 15 минут, ответим на вопросы и предложим бесплатный выезд замерщика. Без навязчивых звонков.", subject = "" } = {}) {
+export function ctaBlock({ base = "", title = "Расскажите, что хотите изменить", note = "Напишите пару слов о квартире: площадь, состояние и что нужно сделать. Если пока есть только идея — начнём с неё.", subject = "" } = {}) {
   return `<section class="section section--cta" id="zayavka">
   <div class="container">
     <div class="cta-card">
@@ -243,7 +233,7 @@ export function ctaBlock({ base = "", title = "Расскажите о ваше�
         </label>
         <label class="field">
           <span>Телефон</span>
-          <input type="tel" name="phone" id="cf-phone" placeholder="+7 (___) ___-__-__" inputmode="tel" autocomplete="tel" required>
+          <input type="tel" name="phone" id="cf-phone" placeholder="+7 999 123-45-67" inputmode="tel" autocomplete="tel" aria-describedby="cf-phone-error" required>
           <small class="field__error" id="cf-phone-error" role="alert"></small>
         </label>
         <label class="field">
@@ -261,7 +251,7 @@ export function ctaBlock({ base = "", title = "Расскажите о ваше�
         <input type="hidden" name="consent_ts" id="cf-consent-ts">
         <input type="hidden" name="consent_docs_rev" value="${legalRevision}">
         <button type="submit" class="btn btn--gold btn--full" id="cf-submit" aria-disabled="true">Заказать звонок</button>
-        <p class="cta-form__note">Перезвоним в течение 15 минут в рабочее время.</p>
+        <p class="cta-form__note">Демонстрационная форма. Данные не отправляются.</p>
       </form>
     </div>
   </div>

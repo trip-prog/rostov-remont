@@ -8,7 +8,7 @@ import { site, icons, services, categories, mainNav, legalDocs } from "./site.da
 
 // Версия ссылок на css/js. Поднимается при изменении стилей или скриптов,
 // чтобы у вернувшихся посетителей не осталась старая версия в кэше.
-export const ASSET_VERSION = "13";
+export const ASSET_VERSION = "20";
 
 /** Иконка в единой обёртке: тонкая линия, наследует цвет текста. */
 export const icon = (name, cls = "") =>
@@ -41,14 +41,13 @@ function head({ title, description, base, canonical }) {
   <title>${title}</title>
   <meta name="robots" content="noindex">
   <meta name="description" content="${description}">
-  <meta name="theme-color" content="#f6f6f3">
+  <meta name="theme-color" content="#ffffff">
   <meta property="og:title" content="${title}">
   <meta property="og:description" content="${description}">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="ru_RU">${canonical ? `\n  <link rel="canonical" href="${canonical}">` : ""}
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="preload" href="${base}fonts/tenor-sans-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="${base}fonts/fonts.css?v=${ASSET_VERSION}">
   <link rel="stylesheet" href="${base}css/style.css?v=${ASSET_VERSION}">
   <link rel="icon" href="${favicon}">`;
 }
@@ -68,12 +67,14 @@ function header(ctx) {
   return `<header class="header" id="header">
   <div class="container header__inner">
     ${logo(base)}
+    <span class="header__city">Ремонт квартир<br>в Ростове-на-Дону</span>
     <nav class="nav" aria-label="Основная навигация">
         ${links}
     </nav>
     <div class="header__actions">
-      <a href="${site.phoneHref}" class="header__phone">${site.phone}</a>
-      <button type="button" class="menu-btn" id="menu-open" aria-haspopup="dialog" aria-expanded="false" aria-controls="drawer">
+      <a href="${site.phoneHref}" class="header__phone">${site.phone}<small>Ежедневно, 9:00–20:00</small></a>
+      <a href="#zayavka" class="header__cta">Обсудить ремонт</a>
+      <button type="button" class="menu-btn" id="menu-open" aria-label="Открыть меню" aria-haspopup="dialog" aria-expanded="false" aria-controls="drawer">
         <span class="menu-btn__bars" aria-hidden="true"><span></span><span></span><span></span></span>
         <span class="menu-btn__label">Меню</span>
       </button>
@@ -112,7 +113,7 @@ function drawer(ctx) {
   <div class="drawer__foot">
     <a href="${site.phoneHref}" class="drawer__phone">${site.phone}</a>
     <span class="drawer__hours">${site.hours}</span>
-    <a href="${base}kontakty.html" class="btn btn--gold btn--full">Заказать звонок</a>
+    <a href="${base}kontakty.html" class="btn btn--gold btn--full">Обсудить ремонт</a>
   </div>
 </aside>`;
 }
@@ -144,7 +145,7 @@ function footer(ctx) {
   <div class="container footer__top">
     <div class="footer__brand">
       ${logo(base, " logo--light")}
-      <p>Ремонт квартир, новостроек и коммерческих помещений в Ростове-на-Дону под ключ с ${site.since} года.</p>
+      <p>Ремонт квартир, новостроек и коммерческих помещений в Ростове-на-Дону под ключ.</p>
       <div class="footer__contacts">
         <a href="${site.phoneHref}" class="footer__phone">${site.phone}</a>
         <a href="mailto:${site.email}">${site.email}</a>
@@ -191,7 +192,7 @@ export function page({ title, description, base = "", active = "", slug = "", ca
 <head>
 ${head({ title, description, base, canonical })}
 </head>
-<body>
+<body data-page="${active}">
 
 <a href="#main" class="skip-link">К основному содержимому</a>
 
