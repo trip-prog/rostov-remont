@@ -30,7 +30,7 @@ async function emit(relPath, html) {
 
 /* ================= ГЛАВНАЯ ================= */
 function buildHome() {
-  const featured = ["kapitalnyy-remont", "kosmeticheskiy-remont", "novostroyka", "vannaya", "elektrika", "santehnika"].map((slug) => serviceBySlug[slug]);
+  const featured = ["kosmeticheskiy-remont", "kapitalnyy-remont", "novostroyka"].map((slug) => serviceBySlug[slug]);
   const tile = workGroups.find((group) => group.id === "tile");
   const electrical = workGroups.find((group) => group.id === "electrical");
   const plumbing = workGroups.find((group) => group.id === "plumbing");
@@ -43,41 +43,62 @@ function buildHome() {
     { title: "Готовая комната", note: "Остаются текстиль, декор и приёмка результата.", src: "img/stage-5.jpg" },
   ];
   const body = `
-<section class="site-intro">
+<section class="home-hero">
   <div class="container">
-    <div class="intro-heading">
-      <h1>Ремонт квартир<br>в Ростове-на-Дону</h1>
-      <div><p>Квартира целиком, ванная или отдельные работы. Посмотрите, что мы делаем, и расскажите о своей задаче.</p><a class="btn btn--gold" href="#zayavka">Обсудить ремонт</a></div>
-    </div>
-    <div class="intro-project">
-      <a class="intro-project__photo" href="portfolio.html#work-tile"><img src="${tile.photos[3].src}" alt="${tile.photos[3].alt}" width="1024" height="768" fetchpriority="high"></a>
-      <div class="intro-project__info">
-        <h2>Отделка ванной</h2><p>Плитка под камень и дерево, подвесная тумба, подсветка и встроенные смесители.</p><a class="text-link" href="portfolio.html#work-tile">Все работы по плитке</a>
-        <div class="intro-project__next"><span>Есть и фотографии процесса</span><a href="portfolio.html#work-electrical"><img src="${electrical.photos[1].src}" alt="Разводка кабеля по потолку до отделки" width="960" height="1280" loading="lazy"><span>Электрика до отделки ${icon("arrow")}</span></a></div>
+    <div class="home-hero__scene">
+      <img class="home-hero__image" src="${tile.photos[3].src}" alt="${tile.photos[3].alt}" width="1024" height="768" fetchpriority="high">
+      <div class="home-hero__content">
+        <h1>Ремонт квартир<br><span>в Ростове-на-Дону</span></h1>
+        <p>От черновой отделки до готового интерьера.<br> Квартира целиком или отдельная комната.</p>
+        <div class="home-hero__actions"><a class="btn btn--gold" href="#zayavka">Обсудить мой ремонт</a><a class="btn btn--outline" href="portfolio.html">Посмотреть работы</a></div>
       </div>
+      <a class="home-hero__caption" href="portfolio.html#work-tile">На фото — отделка ванной ${icon("arrow")}</a>
+    </div>
+    <nav class="home-shortcuts" aria-label="Выберите задачу">
+      <a href="uslugi/kapitalnyy-remont.html"><span><b>Квартира под ключ</b><small>От плана до чистовой отделки</small></span>${icon("arrow")}</a>
+      <a href="uslugi/vannaya.html"><span><b>Ванная и санузел</b><small>Плитка, сантехника и монтаж</small></span>${icon("arrow")}</a>
+      <a href="uslugi/index.html#works"><span><b>Отдельные работы</b><small>Электрика, стены, потолки и полы</small></span>${icon("arrow")}</a>
+    </nav>
+  </div>
+</section>
+<section class="section home-work">
+  <div class="container">
+    ${sectionHead({ title: "Наши работы", note: "Отделка ванной, кухня и спальня с наших объектов. Больше фотографий и видео — в портфолио.", link: { href: "portfolio.html", label: "Все работы" }, row: true })}
+    <div class="home-work__grid">
+      <a class="work-preview" href="portfolio.html#work-tile"><img src="${tile.photos[0].src}" alt="${tile.photos[0].alt}" width="960" height="1280" loading="lazy"><span><b>Ванная комната</b>${icon("arrow")}</span><p>Плитка и сантехника</p></a>
+      <a class="work-preview" href="portfolio.html#video-1"><img src="media/kitchen-detail.jpg" alt="Белая кухня с барной стойкой — кадр из видео" width="720" height="1116" loading="lazy"><span><b>Кухня с барной стойкой</b>${icon("arrow")}</span><p>Видео готовой квартиры</p></a>
+      <a class="work-preview" href="portfolio.html#video-2"><img src="media/project-2-cover.jpg" alt="Спальня с бежевым текстилем и серым полом — кадр из видео" width="480" height="848" loading="lazy"><span><b>Спальня в тёплых тонах</b>${icon("arrow")}</span><p>Видео готовой квартиры</p></a>
     </div>
   </div>
 </section>
-<section class="section home-services">
-  <div class="container service-overview">
-    <div class="service-overview__intro"><h2 class="section__title">Что нужно сделать?</h2><p class="section__note">Можно заказать весь ремонт или поручить нам отдельный этап. Цены ниже — за работу, без материалов.</p><a class="text-link" href="uslugi/index.html">Все услуги и расценки</a></div>
-    ${serviceGrid(featured)}
+<section class="section section--alt home-services">
+  <div class="container">
+    ${sectionHead({ title: "Какой ремонт вам нужен?", note: "Выберите подходящий вариант. Цены указаны за работу, без материалов.", link: { href: "tseny.html", label: "Полный прайс-лист" }, row: true })}
+    <div class="repair-options">${featured.map((s, i) => `<article class="repair-option"><h3>${s.menu}</h3><p>${["Обновить отделку, сохранив планировку и основные коммуникации.", "Заменить старую отделку и коммуникации, подготовить квартиру заново.", "Превратить квартиру от застройщика в готовое жильё."][i]}</p><strong>${s.price}</strong><span class="repair-option__term">${s.term}</span><ul>${s.includes.slice(0, 3).map((item) => `<li>${icon("check")}${item.t}</li>`).join("")}</ul><a class="btn btn--white" href="uslugi/${s.slug}.html">Что входит в ремонт ${icon("arrow")}</a></article>`).join("")}</div>
+    <p class="home-services__more">Нужна только кухня, санузел или один этап? <a class="text-link" href="uslugi/index.html">Посмотреть все услуги</a></p>
   </div>
 </section>
 <section class="section assembly" id="assembly" aria-labelledby="assembly-title">
   <div class="container">
-    <div class="assembly__heading"><div><h2 id="assembly-title" class="section__title">Из пустой комнаты<br>в готовую квартиру</h2><p class="section__note">Передвиньте ползунок, чтобы посмотреть этапы.</p></div><span class="assembly__disclaimer">Иллюстрация последовательности работ</span></div>
-    <div class="assembly__frames">${stages.map((stage, i) => `<img class="assembly__frame${i === 0 ? ' is-active' : ''}" src="${stage.src}" alt="${stage.title}" data-note="${stage.note}" width="1024" height="572" loading="lazy" decoding="async">`).join("")}</div>
-    <div class="assembly__controls"><label for="assembly-range">Этап <output id="assembly-counter" for="assembly-range">1 из 6</output></label><input id="assembly-range" type="range" min="0" max="5" step="1" value="0" aria-valuetext="Квартира без отделки"><button type="button" class="btn btn--white" id="assembly-next">Следующий этап ${icon("arrow")}</button></div>
-    <div class="assembly__caption" aria-live="polite"><h3 id="assembly-caption">${stages[0].title}</h3><p id="assembly-note">${stages[0].note}</p></div>
+    <div class="section__head section__head--center"><h2 id="assembly-title" class="section__title">Как собирается ваша квартира</h2><p class="section__note">От пустой комнаты до мебели и света.<br> Передвиньте ползунок и посмотрите, что меняется на каждом этапе.</p></div>
+    <div class="assembly__box">
+      <div class="assembly__frames">${stages.map((stage, i) => `<img class="assembly__frame${i === 0 ? ' is-active' : ''}" src="${stage.src}" alt="${stage.title}" data-note="${stage.note}" width="1024" height="572" loading="lazy" decoding="async">`).join("")}</div>
+      <div class="assembly__panel">
+        <div class="assembly__controls"><label for="assembly-range">Этап <output id="assembly-counter" for="assembly-range">1 из 6</output></label><input id="assembly-range" type="range" min="0" max="5" step="1" value="0" aria-valuetext="Квартира без отделки"><button type="button" class="btn btn--white" id="assembly-next">Следующий этап ${icon("arrow")}</button></div>
+        <div class="assembly__caption" aria-live="polite"><h3 id="assembly-caption">${stages[0].title}</h3><p id="assembly-note">${stages[0].note}</p></div>
+      </div>
+    </div>
+    <p class="assembly__disclaimer">Иллюстрация последовательности работ</p>
     <noscript><p>На иллюстрации — комната до ремонта. Переключение этапов доступно с JavaScript.</p></noscript>
   </div>
 </section>
-<section class="section">
-  <div class="container field-notes">
-    <div class="field-notes__text"><h2 class="section__title">До того,<br>как закрыли стены</h2><p class="section__note">Фотографии электрики и сантехники с наших объектов. Можно открыть снимок и рассмотреть соединения, трассы и выводы.</p><a class="text-link" href="portfolio.html">Открыть портфолио</a></div>
-    <a class="field-notes__photo" href="portfolio.html#work-electrical"><img src="${electrical.photos[3].src}" alt="${electrical.photos[3].alt}" width="960" height="1280" loading="lazy"><span>Разводка электрики по коридору</span></a>
-    <a class="field-notes__photo" href="portfolio.html#work-plumbing"><img src="${plumbing.photos[1].src}" alt="${plumbing.photos[1].alt}" width="960" height="1280" loading="lazy"><span>Коллекторный узел водоснабжения</span></a>
+<section class="section section--alt">
+  <div class="container">
+    ${sectionHead({ title: "Что остаётся под отделкой", note: "Показываем и готовые помещения, и монтаж до закрытия стен.", link: { href: "portfolio.html#work-electrical", label: "Фотографии процесса" }, row: true })}
+    <div class="process-photos">
+      <a href="portfolio.html#work-electrical"><img src="${electrical.photos[3].src}" alt="${electrical.photos[3].alt}" width="960" height="1280" loading="lazy"><span>Разводка электрики ${icon("arrow")}</span></a>
+      <a href="portfolio.html#work-plumbing"><img src="${plumbing.photos[1].src}" alt="${plumbing.photos[1].alt}" width="960" height="1280" loading="lazy"><span>Монтаж водоснабжения ${icon("arrow")}</span></a>
+    </div>
   </div>
 </section>
 ${ctaBlock({ title: "Обсудить ремонт", note: "Укажите площадь квартиры и что нужно сделать. Если есть план или фотографии, их можно отправить на почту." })}`;
@@ -89,7 +110,7 @@ function buildServicesIndex() {
   const groups = categories
     .map((cat) => {
       const list = services.filter((s) => s.category === cat.id);
-      return `<section class="section${cat.id === "rooms" ? " section--alt" : ""}">
+      return `<section class="section${cat.id === "rooms" ? " section--alt" : ""}" id="${cat.id}">
   <div class="container">
     ${sectionHead({ title: cat.title, note: cat.note })}
     ${serviceGrid(list, "")}

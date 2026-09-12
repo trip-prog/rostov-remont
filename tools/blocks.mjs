@@ -64,7 +64,7 @@ export function serviceGrid(list, dir = "uslugi/") {
 export function videoGrid(base = "") {
   const cards = videoProjects
     .map(
-      (p) => `<article class="project project--video">
+      (p, i) => `<article class="project project--video" id="video-${i + 1}">
         <div class="project__media">
           <video class="project__video" controls muted playsinline preload="none" poster="${base}${p.poster}" aria-label="${p.alt}">
             <source src="${base}${p.video}" type="video/mp4">
